@@ -427,6 +427,36 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
 .handRow .hand{container-type:inline-size;padding:12px 2px 6px}
 .handRow .card{width:min(calc((100cqw - 20px) / 3),138px)}
 .handRow .hand.many .card{width:min(calc((100cqw - 28px) / 4),118px)}
+
+/* Handy: alles bis zur Hand passt auf einen Bildschirm */
+.kRow{display:flex;align-items:center;gap:8px}
+.kRow .ropes svg{width:14px;height:14px}
+#play .boardWrap{max-width:var(--bw,400px)!important;padding-bottom:12px}
+#play .playArea{margin-top:4px}
+.resbar{margin:4px auto 0!important}
+.res{padding:5px 4px 4px}
+.res .rv{font-size:20px}
+.res svg{width:19px;height:19px}
+.hint{font-size:14px;margin:6px 0 2px;line-height:1.25}
+.handRow .deckCol{gap:6px}
+.handRow .deckCol .deck{width:28px}
+.handRow .hand{padding-top:8px}
+.handRow .wface span{display:none}
+
+.cback.sb{background:radial-gradient(circle at 50% 45%,#f9c98f 0,#e88a3c 50%,#a8562b 100%)}
+.cback.sb svg{width:62%}
+.toolRow{display:flex;align-items:center;gap:8px;width:100%;max-width:440px;margin:4px auto 0}
+.toolRow .deckCol{flex:0 0 auto;display:flex;flex-direction:row;gap:5px;padding:0}
+.toolRow .dk{gap:0}.toolRow .dk>span{display:none}
+.toolRow .deckCol .deck{width:30px;margin:0 6px 6px 0;border-width:2.5px;box-shadow:2px 2px 0 #fff,3.5px 3.5px 0 var(--ink),5px 5px 0 #fff,6.5px 6.5px 0 var(--ink)}
+.toolRow .wface span{display:none}
+.toolRow .resbar{flex:1 1 auto;min-width:0;margin:0!important;gap:6px}
+.toolRow .res .rl{font-size:11px}
+.toolRow .res .rl small{font-size:10px}
+@media (max-width:430px){.toolRow .res .rl small{display:none}}
+.toolRow .res .rv{font-size:19px;gap:4px}
+.handRow .hand{justify-content:center}
+.handRow .card{width:min(calc((100cqw - 20px) / 3),124px)}
 </style>
 </head>
 <body>
@@ -520,9 +550,8 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
     <div class="wrap">
       <div class="topbar">
         <div class="isleTitle">
-          <div class="k" id="pK">Insel 1 von 4</div>
+          <div class="kRow"><div class="k" id="pK">Insel 1 von 4</div><div class="ropes" id="ropesTop" title="Ankerseile"></div></div>
           <h2 id="pName">Stille Lichtung</h2>
-          <div class="ropes" id="ropesTop" style="margin-top:4px" title="Ankerseile"></div>
         </div>
                 <div class="pill" id="livePill" title="Vorrat · diese Insel"><span>✦</span><span id="vorrat">0</span><span id="live" style="font-size:12px"></span></div>
         <button class="btn iconbtn" id="bPause" aria-label="Menü">☰</button>
@@ -530,18 +559,20 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
       <div class="playArea">
         <div class="boardWrap"><div class="board" id="board"></div></div>
       </div>
-      <div class="resbar">
-        <button class="res" id="rWa"></button><button class="res" id="rDu"></button><button class="res" id="rWi"></button>
+      <div class="toolRow">
+        <div class="deckCol">
+          <div class="dk"><div class="deck" id="wdeck"><div class="cback wb"><svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg></div><div class="wface" id="wface"></div><span class="n" id="wN">10</span></div><span>Wind</span></div>
+          <div class="dk"><div class="deck" id="ideck"><div class="cback ib"><svg viewBox="0 0 30 24"><path d="M4 9h22l-3 5H7z" fill="#9fd36c" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 14h16l-5 7-3-3-3 4z" fill="#c98b5a" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></div><span class="n" id="iN">11</span></div><span>Inseln</span></div>
+          <div class="dk"><div class="deck" id="deck"><div class="cback sb"><svg viewBox="0 0 30 26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 24V12"/><path d="M15 14C9 14 5.5 10.5 5.5 5.5C11 5.5 15 9 15 14Z" fill="#fff" fill-opacity=".35"/><path d="M15 11.5C15 6.5 18.5 2.5 24.5 2.5C24.5 8 20.5 11.5 15 11.5Z" fill="#fff" fill-opacity=".35"/><path d="M8 24h14"/></svg></div><span class="n" id="deckN">0</span></div><span>Früchte</span></div>
+        </div>
+        <div class="resbar">
+          <button class="res" id="rWa"></button><button class="res" id="rDu"></button><button class="res" id="rWi"></button>
+        </div>
       </div>
       <div class="tableRow">
         <div class="mid"><div class="jokers" id="jokers"></div><div class="hint" id="hint"></div><div class="actions" id="actions"></div></div>
       </div>
       <div class="handRow">
-          <div class="deckCol">
-          <div class="dk"><div class="deck" id="wdeck"><div class="cback wb"><svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg></div><div class="wface" id="wface"></div><span class="n" id="wN">10</span></div><span>Wind</span></div>
-          <div class="dk"><div class="deck" id="ideck"><div class="cback ib"><svg viewBox="0 0 30 24"><path d="M4 9h22l-3 5H7z" fill="#9fd36c" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 14h16l-5 7-3-3-3 4z" fill="#c98b5a" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></div><span class="n" id="iN">11</span></div><span>Inseln</span></div>
-          <div class="dk"><div class="deck" id="deck"><div class="cback"><svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg></div><span class="n" id="deckN">0</span></div><span>Früchte</span></div>
-        </div>
         <div class="hand" id="hand"></div>
       </div>
       <div class="gustRow" id="gusts"></div>
@@ -582,6 +613,7 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
 </div>
 
 <div id="modal"></div>
+<div id="sabProbe" style="position:fixed;visibility:hidden;pointer-events:none;padding-bottom:env(safe-area-inset-bottom)"></div>
 <div id="cine"><div class="cReqs" id="cReqs"></div><div class="cTitle">Moon erwacht…</div><div class="mEyes"><div class="eye ce"><i class="pup"></i><b class="lid"></b></div><div class="eye ce"><i class="pup"></i><b class="lid"></b></div></div></div>
 
 <script>
@@ -702,7 +734,7 @@ const norm=cells=>{const mx=Math.min(...cells.map(c=>c[0])),my=Math.min(...cells
 const rot=cells=>norm(cells.map(([x,y])=>[-y,x]));
 const mir=cells=>norm(cells.map(([x,y])=>[-x,y]));
 const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
-function show(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.toggle('on',s.id===id);if(s.id===id)s.scrollTop=0});lastScreen=id;syncMoon(id)}
+function show(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.toggle('on',s.id===id);if(s.id===id)s.scrollTop=0});lastScreen=id;syncMoon(id);if(id==='play')requestAnimationFrame(()=>{fitBoard();if(G&&G.board)renderBoard()})}
 function syncMoon(id){const on=!!((id==='play'||id==='score')&&G&&G.moon);$('#moonDock').classList.toggle('on',!!(G&&G.moon));$('#eyes').classList.toggle('hide',on||id==='')}
 function moonMood(m){
  const d=$('#moonDock'),E=$('#eyes');
@@ -905,6 +937,7 @@ async function gustTurn(){
  renderAll();
  await new Promise(r=>G.turnDone=r);
 }
+const SEEDBACK=()=>`<svg viewBox="0 0 30 26" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 24V12"/><path d="M15 14C9 14 5.5 10.5 5.5 5.5C11 5.5 15 9 15 14Z" fill="#fff" fill-opacity=".35"/><path d="M15 11.5C15 6.5 18.5 2.5 24.5 2.5C24.5 8 20.5 11.5 15 11.5Z" fill="#fff" fill-opacity=".35"/><path d="M8 24h14"/></svg>`;
 const BACK=()=>`<svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg>`;
 function renderDeck(){
  $('#deckN').textContent=G.deck.length;$('#iN').textContent=G.islandDeck.length;$('#wN').textContent=G.wDeck?G.wDeck.length:WEATHER.length;
@@ -922,7 +955,7 @@ function flyClone(fromEl,toRect,{dur=480,fade=true,scale,rot=0}={}){
 }
 function flyFromDeck(cardEl){
  const d=rectOf($('#deck')),c=rectOf(cardEl);
- const back=el('div','cback',BACK());cardEl.appendChild(back);
+ const back=el('div','cback sb',SEEDBACK());cardEl.appendChild(back);
  cardEl.animate([{transform:`translate(${d.left-c.left+(d.width-c.width)/2}px,${d.top-c.top+(d.height-c.height)/2}px) scale(${d.width/c.width}) rotate(-10deg)`},{transform:'none'}],{duration:520,easing:'cubic-bezier(.2,.9,.25,1.15)'});
  back.animate([{opacity:1},{opacity:1,offset:.45},{opacity:0}],{duration:520,fill:'forwards'}).onfinish=()=>back.remove();
 }
@@ -1235,7 +1268,7 @@ function renderActions(){
   setHint(ok?'Wo sollen die Krähen landen? Am besten dort, wo es am wenigsten wehtut.':'Krähen landen nur auf bepflanzten Feldern.');
  }else if(G.phase==='pick'&&!G.busy){
   const fitAny=G.hand.some(anyFit);
-  if(G.blowMode)setHint(`${G.weather.name}: Ein Samen, der ${G.weather.fav==='S'?'keine':'kein'} ${FRUIT[G.weather.fav].n} ist, muss zurück unter den Stapel. Welcher?`);
+  if(G.blowMode)setHint(`${G.weather.name}: Welcher Samen fliegt zurück unter den Stapel?`);
   else if(G.swapMode)setHint('Welche Karte soll der Wind davontragen?');
   else setHint(fitAny?'Wähle die Früchte.':'Keine Form passt auf deine Insel.');
   if(!fitAny&&!G.blowMode)mk('Alle abwerfen',discardAll,'primary');
@@ -1280,7 +1313,17 @@ function renderJokers(){
  $('#jokers').innerHTML='';
 }
 document.addEventListener('keydown',e=>{if(!G||lastScreen!=='play')return;if(e.key==='r')transform(rot);if(e.key==='m')transform(mir);if(e.key==='Enter'){G.phase==='crow'?landCrow():plant()}});
-window.addEventListener('resize',()=>{if(G&&lastScreen==='play')renderBoard()});
+window.addEventListener('resize',()=>{if(G&&lastScreen==='play'){fitBoard();renderBoard()}});
+/* Feld so groß wie möglich, aber die Hand soll ohne Scrollen sichtbar bleiben */
+function fitBoard(){
+ const play=$('#play'),bw=document.querySelector('#play .boardWrap'),hr=document.querySelector('#play .handRow');if(!bw||!hr||!play.offsetParent)return;
+ document.documentElement.style.setProperty('--bw','400px');
+ const sab=parseFloat(getComputedStyle(document.getElementById('sabProbe')).paddingBottom)||0;
+ const hrr=hr.getBoundingClientRect(),cw=Math.min((hrr.width-24)/3,124),hand=hrr.top+play.scrollTop+cw*88/63+22, limit=innerHeight-sab-6;
+ const cur=bw.getBoundingClientRect().width, over=hand-limit;
+ const w=over>0?Math.max(260,cur-over):cur;
+ document.documentElement.style.setProperty('--bw',Math.round(w)+'px');
+}
 
 function groupCells(){
  const B=G.board,seen=new Set(),out=new Set();
