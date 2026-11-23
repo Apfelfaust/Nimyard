@@ -473,6 +473,43 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
 .tongueWrap .mouth svg{display:block;width:100%;height:auto}
 .tongueWrap .tongue,.inTable .tongueWrap .tongue{position:absolute;left:50%;top:34%;width:110%;height:150%;opacity:0;transform:translateX(-50%) scaleY(.1);transform-origin:50% 0;z-index:2;animation:none!important;background:#ef7f9f}
 .tongueWrap .drool{position:absolute;display:block;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:#dff1fb;border:1.5px solid #9cc6e2;z-index:3;pointer-events:none}
+
+.evBtns .btn{flex-direction:column;gap:3px;padding-left:6px;padding-right:6px}
+.evBtns .btn small{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:800;opacity:.9}
+.evBtns .btn small svg{width:16px;height:16px}
+.evBtns .btn:disabled{background:#f4f1f8;color:#6b6684;border-color:#8f89a6;box-shadow:0 3px 0 #8f89a6}
+.evBtns .btn:disabled svg{opacity:.7}
+
+/* offen liegende Wetterkarte auf dem Wind-Stapel: wie eine Mini-Karte */
+.wface{z-index:4;background:#fff;border:0;justify-content:flex-start;padding-top:0;overflow:hidden}
+.wface::before{content:"";display:block;width:100%;height:28%;flex:0 0 28%;background:linear-gradient(180deg,#4f9be0,#2f6db5)}
+.wface svg{width:70%;margin:auto 0}
+.wface.on{animation:wfIn .5s ease-out}
+@keyframes wfIn{from{transform:rotateY(90deg)}to{transform:none}}
+
+.log{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.log div{min-width:0;padding:6px 3px;display:flex;flex-direction:column;justify-content:space-between;gap:2px}
+.log div span{font-size:clamp(9.5px,2.7vw,12px);line-height:1.15;overflow-wrap:anywhere;hyphens:auto}
+
+.ship{width:min(88vw,380px)}
+#shipArt2 .shProp{transform-box:fill-box;transform-origin:center;animation:shProp .35s linear infinite}
+@keyframes shProp{0%,100%{transform:scaleY(1)}50%{transform:scaleY(.12)}}
+#shipArt2 .shGlow{animation:shGlow 2.2s ease-in-out infinite}
+@keyframes shGlow{0%,100%{opacity:.9}40%{opacity:.55}60%{opacity:1}75%{opacity:.7}}
+#shipArt2 .shFlag{transform-box:fill-box;transform-origin:0 50%;animation:shFlag 1.6s ease-in-out infinite}
+@keyframes shFlag{0%,100%{transform:skewY(0) scaleX(1)}50%{transform:skewY(6deg) scaleX(.9)}}
+#shipArt2 .shCrow{transform-box:fill-box;transform-origin:50% 100%;animation:shCrow 5s ease-in-out infinite}
+@keyframes shCrow{0%,70%,100%{transform:rotate(0)}75%{transform:rotate(-8deg)}82%{transform:rotate(6deg)}88%{transform:rotate(0)}}
+#shipArt2 .shScarf{animation:shScarf 1.2s ease-in-out infinite}
+@keyframes shScarf{50%{d:path("M270 192 Q 286 190 300 190 Q 298 198 306 196")}}
+
+/* Untertitel: zwei Zeilen, ein Windhauch läuft durch die Buchstaben */
+.title .sub{display:flex;flex-direction:column;align-items:center;gap:2px;margin-top:10px;letter-spacing:.3px}
+.title .sub .l1{font-size:1.4em;color:var(--blue);text-shadow:0 2px 0 #fff}
+.title .sub .l2{font-size:.98em;color:var(--ink);transform:rotate(-1.5deg)}
+.title .sub i{font-style:normal;display:inline-block;animation:breeze 5s ease-in-out infinite;animation-delay:calc(var(--i)*55ms)}
+@keyframes breeze{0%,62%,100%{transform:translateY(0) rotate(0)}68%{transform:translateY(-4px) rotate(-5deg)}74%{transform:translateY(1px) rotate(3deg)}80%{transform:translateY(0) rotate(0)}}
+@media (prefers-reduced-motion:reduce){.title .sub i{animation:none}}
 </style>
 </head>
 <body>
@@ -484,16 +521,132 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
   <section class="screen on" id="menu">
     <div class="title">
       <h1>Nimyard</h1>
-      <div class="sub">Die Blunberrey und die Früchte vom Wind</div>
+      <div class="sub"><span class="l1"><i style="--i:0">D</i><i style="--i:1">i</i><i style="--i:2">e</i> <i style="--i:3">B</i><i style="--i:4">l</i><i style="--i:5">u</i><i style="--i:6">n</i><i style="--i:7">b</i><i style="--i:8">e</i><i style="--i:9">r</i><i style="--i:10">r</i><i style="--i:11">e</i><i style="--i:12">y</i></span><span class="l2"><i style="--i:15">u</i><i style="--i:16">n</i><i style="--i:17">d</i> <i style="--i:18">d</i><i style="--i:19">i</i><i style="--i:20">e</i> <i style="--i:21">F</i><i style="--i:22">r</i><i style="--i:23">ü</i><i style="--i:24">c</i><i style="--i:25">h</i><i style="--i:26">t</i><i style="--i:27">e</i> <i style="--i:28">v</i><i style="--i:29">o</i><i style="--i:30">m</i> <i style="--i:31">W</i><i style="--i:32">i</i><i style="--i:33">n</i><i style="--i:34">d</i></span></div>
     </div>
-    <svg class="ship" viewBox="0 0 320 230" id="shipArt"></svg>
+    <svg class="ship" viewBox="0 0 420 380" id="shipArt2" xmlns="http://www.w3.org/2000/svg"><defs>
+<clipPath id="sh_bal"><path id="sh_balp" d="M70 92 C 70 40, 140 16, 210 16 C 285 16, 352 40, 352 92 C 352 142, 285 166, 210 166 C 138 166, 70 144, 70 92Z"/></clipPath>
+<clipPath id="sh_hc"><path id="sh_hullp" d="M86 230 H334 Q 350 230 344 244 C 336 270, 322 298, 290 310 C 250 322, 170 322, 130 310 C 98 298, 84 270, 76 244 Q 70 230 86 230Z"/></clipPath>
+<linearGradient id="sh_hull" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dba06f"/><stop offset=".6" stop-color="#b8754a"/><stop offset="1" stop-color="#8a5132"/></linearGradient>
+<radialGradient id="sh_shade" cx=".36" cy=".28" r=".8"><stop offset="0" stop-color="#fff" stop-opacity=".45"/><stop offset=".55" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#24203a" stop-opacity=".25"/></radialGradient>
+<linearGradient id="sh_hshade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#24203a" stop-opacity=".18"/><stop offset=".3" stop-color="#fff" stop-opacity=".12"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#24203a" stop-opacity=".22"/></linearGradient>
+<radialGradient id="sh_lamp"><stop offset="0" stop-color="#fff3b0" stop-opacity=".9"/><stop offset="1" stop-color="#fff3b0" stop-opacity="0"/></radialGradient>
+</defs>
+<!-- wind wisps -->
+<g fill="none" stroke="#fff" stroke-linecap="round" opacity=".8"><path d="M10 60 C 30 56, 44 62, 58 56" stroke-width="3"/><path d="M372 190 C 390 186, 402 192, 414 188" stroke-width="3"/><path d="M20 210 C 36 206, 48 212, 60 208" stroke-width="2.5"/></g>
+<g stroke="#24203a" stroke-linecap="round" stroke-linejoin="round">
+<!-- tail fin -->
+<path d="M342 78 L384 52 L377 92 L384 132 L342 108Z" fill="#f2c7a0" stroke-width="3.5"/>
+<path d="M350 80 L374 66 M350 106 L374 120" stroke-width="1.8" fill="none" stroke-dasharray="3 3"/>
+<path d="M352 92 H378" stroke-width="2" fill="none"/>
+<!-- balloon -->
+<g clip-path="url(#sh_bal)" stroke-width="2">
+ <rect x="50" y="0" width="80" height="80" fill="#e8b4b0"/><rect x="130" y="0" width="70" height="60" fill="#f6e1c0"/>
+ <rect x="200" y="0" width="80" height="70" fill="#c9c0e6"/><rect x="280" y="0" width="90" height="80" fill="#a9cfe0"/>
+ <rect x="50" y="80" width="70" height="100" fill="#d8b0d4"/><rect x="120" y="60" width="70" height="70" fill="#a9bfe0"/>
+ <rect x="190" y="70" width="60" height="60" fill="#f0d29c"/><rect x="250" y="70" width="60" height="60" fill="#e8b4b0"/>
+ <rect x="310" y="80" width="60" height="100" fill="#f6e1c0"/><rect x="120" y="130" width="80" height="50" fill="#f0d29c"/>
+ <rect x="200" y="130" width="110" height="50" fill="#c9c0e6"/>
+ <!-- tiny pattern on some patches -->
+ <g fill="#fff" stroke="none" opacity=".55"><circle cx="70" cy="30" r="2"/><circle cx="84" cy="42" r="2"/><circle cx="98" cy="28" r="2"/><circle cx="112" cy="44" r="2"/><circle cx="76" cy="56" r="2"/><circle cx="104" cy="62" r="2"/></g>
+ <g stroke="#fff" stroke-width="2" opacity=".5" fill="none"><path d="M205 6 l10 10 M215 6 l10 10 M225 6 l10 10 M235 6 l10 10 M245 6 l10 10 M255 6 l10 10 M265 6 l10 10"/><path d="M325 90 v80 M340 90 v80 M355 90 v80"/></g>
+ <path d="M130 0V180M200 0V180M280 0V180M50 80H370M120 60V180M190 70H310M250 70V130M310 80V180M120 130H310" fill="none" stroke-dasharray="4 3" stroke-width="1.6" opacity=".7"/>
+ <rect x="224" y="30" width="30" height="24" rx="3" fill="#fff4c9" transform="rotate(-8 239 42)"/><path d="M230 36l18 12M248 34l-16 14" stroke-width="2" transform="rotate(-8 239 42)"/>
+ <rect x="96" y="98" width="26" height="20" rx="3" fill="#9fd36c" transform="rotate(10 109 108)"/><path d="M100 102l4 4M110 100l4 4M100 112l4 4" stroke-width="1.6" transform="rotate(10 109 108)"/>
+ <use href="#sh_balp" fill="url(#sh_shade)" stroke="none"/>
+ <path d="M210 16 C 176 60, 176 122, 210 166 M210 16 C 244 60, 244 122, 210 166 M150 22 C 128 64, 128 122, 150 160 M270 22 C 292 64, 292 122, 270 160" fill="none" stroke-width="1.3" opacity=".3"/>
+ <!-- highlight -->
+ <path d="M110 46 C 130 32, 160 26, 186 26" fill="none" stroke="#fff" stroke-width="5" opacity=".7"/>
+</g>
+<use href="#sh_balp" fill="none" stroke-width="4"/>
+<!-- leather straps with buckles -->
+<path d="M120 26 C 104 70, 104 122, 120 158 M300 26 C 316 70, 316 122, 300 158" fill="none" stroke-width="3.2" stroke="#7a4426"/>
+<rect x="100" y="86" width="10" height="12" rx="2" fill="#e8c35a" stroke-width="2"/><rect x="310" y="86" width="10" height="12" rx="2" fill="#e8c35a" stroke-width="2"/>
+<!-- crow sitting on top -->
+<g transform="translate(250 6)"><g class="shCrow">
+ <path d="M0 10 q8 -12 20 -6 q8 4 4 12 h-22z" fill="#3b3557" stroke-width="2.4"/><circle cx="20" cy="4" r="5" fill="#3b3557" stroke-width="2.4"/>
+ <path d="M24 3 l7 2 -7 2z" fill="#e8c35a" stroke-width="1.6"/><circle cx="21" cy="3" r="1.2" fill="#fff" stroke="none"/>
+ <path d="M6 16 v4 M14 16 v4" stroke-width="1.8"/>
+</g></g>
+<!-- rigging -->
+<g stroke-width="2.1" fill="none"><path d="M118 152 L130 230 M168 162 L176 230 M252 162 L244 230 M302 152 L290 230"/><path d="M130 196 L176 190 M244 190 L290 196" stroke-width="1.4" opacity=".7"/></g>
+<!-- lantern on stern pole -->
+<path d="M330 218 V184 h16 V190" fill="none" stroke-width="2.4"/>
+<circle class="shGlow" cx="346" cy="202" r="18" fill="url(#sh_lamp)" stroke="none"/>
+<path d="M339 194 h14 l-2 18 h-10z" fill="#f6e1a0" stroke-width="2.2"/><path d="M338 194 h16 M340 212 h12" stroke-width="2.4"/>
+<!-- propeller -->
+<path d="M344 254 h20" stroke-width="3"/><circle cx="365" cy="254" r="3" fill="#e8c35a" stroke-width="2"/>
+<ellipse class="shProp" cx="368" cy="254" rx="4" ry="17" fill="#f6e1c0" stroke-width="2.5"/>
+<!-- rudder -->
+<path d="M318 292 l20 10 l-10 24 l-18 -14z" fill="#b8754a" stroke-width="3"/>
+<!-- hull -->
+<use href="#sh_hullp" fill="url(#sh_hull)"/>
+<g clip-path="url(#sh_hc)">
+ <g fill="none" stroke="#7a4426" stroke-width="2.2"><path d="M60 250 H360 M60 270 C 140 280, 280 280, 360 270 M60 290 C 140 302, 280 302, 360 290"/></g>
+ <g fill="none" stroke="#7a4426" stroke-width="1.3" opacity=".55"><path d="M100 230 V320 M150 230 V320 M205 230 V320 M258 230 V320 M310 230 V320"/>
+  <path d="M110 240 q14 -3 28 0 M170 262 q16 -3 30 0 M230 240 q14 3 26 0 M280 282 q12 -3 24 0 M130 300 q16 -3 30 0"/></g>
+ <g fill="#5a3522" stroke="none"><circle cx="100" cy="244" r="1.6"/><circle cx="150" cy="244" r="1.6"/><circle cx="205" cy="244" r="1.6"/><circle cx="258" cy="244" r="1.6"/><circle cx="310" cy="244" r="1.6"/>
+ <circle cx="100" cy="264" r="1.6"/><circle cx="150" cy="264" r="1.6"/><circle cx="258" cy="264" r="1.6"/><circle cx="310" cy="264" r="1.6"/></g>
+ <!-- painted stripe with name -->
+ <path d="M60 258 H360" stroke="#e8c35a" stroke-width="6" opacity=".9"/>
+ <use href="#sh_hullp" fill="url(#sh_hshade)" stroke="none"/>
+</g>
+<use href="#sh_hullp" fill="none" stroke-width="4"/>
+<!-- keel -->
+<path d="M150 314 C 190 324, 232 324, 272 314" fill="none" stroke-width="5" stroke="#5a3522"/>
+<!-- bow curl -->
+<path d="M80 236 C 66 230, 62 214, 74 208 C 84 204, 88 216, 80 218" fill="none" stroke-width="3.5"/>
+<!-- patch on hull -->
+<rect x="236" y="276" width="24" height="16" rx="2" fill="#c9a07a" stroke-width="2"/><path d="M240 280h2M252 280h2M240 288h2M252 288h2" stroke-width="1.6"/>
+<!-- portholes -->
+<g stroke-width="3"><circle cx="126" cy="276" r="9" fill="#a9d8f6"/><circle cx="182" cy="280" r="9" fill="#ffe9a8"/><circle cx="296" cy="276" r="8" fill="#a9d8f6"/></g>
+<path d="M121 273 a5 5 0 0 1 6 -2 M291 273 a4 4 0 0 1 5 -2" stroke="#fff" stroke-width="2" fill="none"/>
+<!-- anchor ropes with anchors -->
+<path d="M104 300 C 100 318, 106 334, 102 350" fill="none" stroke="#8a6a50" stroke-width="2.4" stroke-dasharray="4 2"/>
+<g transform="translate(102 356)"><circle cx="0" cy="-4" r="3" fill="none" stroke-width="2"/><path d="M0 -1 V12 M-7 6 Q0 16 7 6 M-4 3 H4" fill="none" stroke-width="2.4"/></g>
+<path d="M318 296 C 324 312, 318 322, 322 334" fill="none" stroke="#8a6a50" stroke-width="2.4" stroke-dasharray="4 2"/>
+<g transform="translate(322 340)"><circle cx="0" cy="-4" r="3" fill="none" stroke-width="2"/><path d="M0 -1 V12 M-7 6 Q0 16 7 6 M-4 3 H4" fill="none" stroke-width="2.4"/></g>
+<!-- railing -->
+<path d="M86 230 V218 M334 230 V218 M86 218 H 334" fill="none" stroke-width="2.4"/>
+<path d="M112 218 V230 M140 218V230 M240 218V230 M272 218V230 M306 218V230" stroke-width="2"/>
+<!-- deck items -->
+<g stroke-width="2.5"><rect x="96" y="206" width="56" height="14" rx="3" fill="#8a5a3a"/><rect x="158" y="206" width="56" height="14" rx="3" fill="#8a5a3a"/></g>
+<g stroke-width="2.2">
+ <path d="M104 206 q-4 -10 4 -12 M116 206 q6 -12 12 -8" fill="#7dbb4b" stroke-width="1.8"/>
+ <circle cx="110" cy="203" r="7" fill="#e88a3c"/><path d="M110 196 q2 -5 6 -6" fill="none" stroke="#4d7f2c" stroke-width="2.4"/><path d="M106 198 q-2 5 0 10 M114 198 q2 5 0 10" fill="none" stroke-width="1.4"/>
+ <circle cx="130" cy="204" r="6" fill="#e88a3c"/><circle cx="144" cy="205" r="4.5" fill="#e88a3c"/>
+ <path d="M166 206 V188 M174 206 V184 M182 206 V188" stroke="#c9952e" stroke-width="2"/>
+ <ellipse cx="166" cy="186" rx="3" ry="5" fill="#f2cf5b"/><ellipse cx="174" cy="182" rx="3" ry="5" fill="#f2cf5b"/><ellipse cx="182" cy="186" rx="3" ry="5" fill="#f2cf5b"/>
+ <circle cx="194" cy="202" r="4" fill="#9b7fd0"/><circle cx="201" cy="202" r="4" fill="#9b7fd0"/><circle cx="197.5" cy="196" r="4" fill="#9b7fd0"/>
+ <path d="M202 206 q4 -14 12 -12 q-10 0 -6 12z" fill="#8aa7c8" stroke-width="2"/>
+</g>
+<!-- barrel & sack -->
+<g stroke-width="2.4"><path d="M222 220 v-16 q0 -4 8 -4 q8 0 8 4 v16 q0 3 -8 3 q-8 0 -8 -3z" fill="#b8754a"/><path d="M222 208 h16 M222 216 h16" stroke-width="1.8"/></g>
+<path d="M242 220 q-4 -14 6 -18 q10 4 6 18z" fill="#e9d6b0" stroke-width="2.2"/><path d="M245 206 q3 -3 6 0" fill="none" stroke-width="1.6"/>
+<!-- farmer -->
+<g>
+ <path d="M266 220 v-20 q0 -8 8 -8 h4 q8 0 8 8 v20z" fill="#6f9cc6" stroke-width="2.6"/>
+ <path d="M270 202 h12 v8 h-12z" fill="#5a83ad" stroke-width="1.8"/>
+ <path d="M268 200 l-10 -12" stroke-width="3" fill="none"/><circle cx="258" cy="186" r="3.5" fill="#f2c7a0" stroke-width="2"/>
+ <circle cx="276" cy="182" r="9" fill="#f2c7a0" stroke-width="2.6"/>
+ <path d="M262 176 Q 276 170 290 176 L 286 180 Q 276 176 266 180Z" fill="#e8c35a" stroke-width="2.4"/>
+ <path d="M268 174 Q 276 160 284 174" fill="#e8c35a" stroke-width="2.4"/><path d="M269 172 h14" stroke="#c94f4f" stroke-width="2"/>
+ <path class="shScarf" d="M270 192 Q 286 194 300 186 Q 296 196 304 200" fill="none" stroke="#e88a3c" stroke-width="4"/>
+ <circle cx="279" cy="182" r="1.3" fill="#24203a" stroke="none"/><path d="M277 187 q2 1.5 4 0" fill="none" stroke-width="1.4"/>
+</g>
+<!-- flag on pole -->
+<path d="M92 218 V168" stroke-width="2.4"/><path class="shFlag" d="M92 168 q12 2 22 6 q-10 2 -22 8z" fill="#e8b4b0" stroke-width="2.2"/>
+<!-- water drips -->
+<path d="M160 318 q-2 10 0 18" stroke="#8ec8f0" stroke-width="3" fill="none"/><path d="M160 342 q-3 4 0 6 q3 -2 0 -6z" fill="#8ec8f0" stroke="none"/>
+<path d="M262 318 q2 8 0 14" stroke="#8ec8f0" stroke-width="3" fill="none"/>
+</g>
+</svg>
     <div class="menuBtns">
       <button class="btn primary" id="bStart">Reise beginnen</button>
       <button class="btn" id="bTut">So geht's</button>
       <button class="btn small" id="bMusic" style="align-self:center"></button>
     </div>
     <div class="best" id="best"></div>
-    <div class="ver">Prototyp v0.1</div>
+    <div class="ver">Beta 1</div>
   </section>
 
   <!-- RULES -->
@@ -802,7 +955,7 @@ function resetEyes(){const e=$('#eyes');e.style.removeProperty('--b');e.style.re
 /* sky */
 (function(){const sky=$('#sky');for(let i=0;i<7;i++){const c=el('div','cloud');const w=60+Math.random()*120;
  c.style.cssText=`width:${w}px;height:${w*.32}px;top:${5+Math.random()*60}%;left:0;animation:drift ${60+Math.random()*60}s linear ${-Math.random()*100}s infinite;opacity:${.5+Math.random()*.4}`;sky.appendChild(c)}})();
-$('#shipArt').innerHTML=SHIP;
+
 document.querySelectorAll('.chip[data-i]').forEach(c=>c.innerHTML=ICON[c.dataset.i]);
 
 /* =================== MODAL =================== */
@@ -913,15 +1066,32 @@ async function moonAwakens(){
  D.style.visibility='';wrap.remove();
  resetEyes();setTimeout(lick,1800);
 }
+/* Tipp auf den offenen Wind-Stapel: die aktuelle Wetterkarte fliegt groß heraus */
+async function peekWeather(ev){
+ if(ev)ev.stopPropagation();
+ if(!G||!G.weather||document.querySelector('.wxScene'))return;
+ const sc=el('div','wxScene');document.body.appendChild(sc);
+ const dr=rectOf($('#wdeck'));
+ const card=el('div','wcard',weatherFace(G.weather));card.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:71';sc.appendChild(card);
+ const cr=rectOf(card),dx=dr.left+dr.width/2-(cr.left+cr.width/2),dy=dr.top+dr.height/2-(cr.top+cr.height/2),s=dr.width/cr.width;
+ const tip=el('div','',`Tippen zum Schließen`);tip.style.cssText=`position:fixed;left:0;right:0;top:${cr.bottom+18}px;text-align:center;color:#fff;font-weight:800;font-size:14px;opacity:0;z-index:72;text-shadow:0 1px 3px rgba(20,16,40,.6)`;sc.appendChild(tip);
+ Snd.chime&&Snd.chime();
+ await card.animate([{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(${s})`},{transform:'translate(-50%,-50%)'}],{duration:420,easing:'cubic-bezier(.2,.9,.3,1.1)',fill:'forwards'}).finished.catch(()=>{});
+ tip.animate([{opacity:0},{opacity:.85}],{duration:300,fill:'forwards'});
+ await new Promise(res=>sc.addEventListener('click',res,{once:true}));
+ tip.remove();sc.style.background='transparent';sc.style.backdropFilter='none';
+ await card.animate([{transform:'translate(-50%,-50%)'},{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(${s})`}],{duration:380,easing:'cubic-bezier(.4,.1,.3,1)',fill:'forwards'}).finished.catch(()=>{});
+ sc.remove();
+}
 function weatherFace(w){return`<div class="wh"><div class="k">WETTER</div><h3>${w.name}</h3></div><div class="wa">${w.fav?ICON[w.fav]:EVART.tail.replace('stroke="#5b4a8b"','stroke="#2f6db5"')}</div><div class="wt">${w.t}</div>`}
 async function newWeather(){
  if(!G.wDeck||!G.wDeck.length)G.wDeck=shuffle([...WEATHER]);
  const w=G.wDeck.pop();
- const sc=el('div','wxScene',`<div style="position:absolute;left:0;right:0;top:10vh;text-align:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:26px;color:#fff;text-shadow:0 2px 0 #24203a">Der Wind dreht…</div>`);
+ const sc=el('div','wxScene',`<div class="wxTitle" style="position:absolute;left:0;right:0;top:10vh;text-align:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:26px;color:#fff;text-shadow:0 2px 0 #24203a">Der Wind dreht…</div>`);
  document.body.appendChild(sc);renderDeck();
  const dr=rectOf($('#wdeck'));
  const card=el('div','wcard',`<div class="wback">${BACK()}</div>`);card.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:71';
- sc.appendChild(card);const cr=rectOf(card);
+ sc.appendChild(card);const cr=rectOf(card);{const tt=sc.querySelector('.wxTitle');tt.style.top=Math.max(12,cr.top-tt.offsetHeight-22)+'px'}
  const dx=dr.left+dr.width/2-(cr.left+cr.width/2),dy=dr.top+dr.height/2-(cr.top+cr.height/2),s=dr.width/cr.width;
  await sleep(250);
  await card.animate([{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(${s})`},{transform:'translate(-50%,-50%)'}],{duration:650,easing:'cubic-bezier(.2,.9,.3,1.1)',fill:'forwards'}).finished;
@@ -992,7 +1162,7 @@ const SEEDBACK=()=>`<svg viewBox="0 0 30 26" fill="none" stroke="#fff" stroke-wi
 const BACK=()=>`<svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg>`;
 function renderDeck(){
  $('#deckN').textContent=G.deck.length;$('#iN').textContent=G.islandDeck.length;$('#wN').textContent=G.wDeck?G.wDeck.length:WEATHER.length;
- const f=$('#wface');if(G.weather){f.classList.add('on');f.innerHTML=`${G.weather.fav?ICON[G.weather.fav]:EVART.tail.replace('stroke="#5b4a8b"','stroke="#fff"')}<span>${G.weather.name}</span>`;f.onclick=()=>toast(`${G.weather.name}: ${G.weather.t}`)}else f.classList.remove('on');
+ const f=$('#wface');if(G.weather){f.classList.add('on');f.innerHTML=`${G.weather.fav?ICON[G.weather.fav]:EVART.tail.replace('stroke="#5b4a8b"','stroke="#2f6db5"')}<span>${G.weather.name}</span>`;f.onclick=peekWeather}else f.classList.remove('on');
 }
 function rectOf(e){return e.getBoundingClientRect()}
 function flyClone(fromEl,toRect,{dur=480,fade=true,scale,rot=0}={}){
@@ -1048,7 +1218,7 @@ async function resolveEvent(ev){
   const prev=`<div style="display:inline-grid;grid-template-columns:repeat(${bbox(ev.cells)[0]},22px);gap:0;margin-top:10px">${(()=>{const[w,h]=bbox(ev.cells),s=new Set(ev.cells.map(p=>p+''));let g='';for(let y=0;y<h;y++)for(let x=0;x<w;x++)g+=s.has([x,y]+'')?`<i style="width:22px;height:22px;background:#3b3557;border:2px solid #24203a;margin:-1px;display:flex">${CROW}</i>`:'<i style="width:22px;height:22px"></i>';return g})()}</div>`;
   if(!orients(ev.cells).some(o=>firstFitCrow(o))){await card(ev.x+'<div style="text-align:center">'+prev+'</div><i>Doch auf deiner Insel ist noch nichts zu holen – die Krähen ziehen weiter.</i>',[{label:'Puh!',cls:'primary',v:1}])}
   else{
-   const v=await card(ev.x+'<div style="text-align:center">'+prev+'</div>',[{label:`${ICON.Wi} Wegpusten (2 Wind)`,cls:'gold',v:'scare',disabled:G.res.Wi<2},{label:'Landen lassen',cls:'primary',v:'ok'}]);
+   const v=await card(ev.x+'<div style="text-align:center">'+prev+'</div>',[{label:`<span class="bl">Wegpusten</span><small>${ICON.Wi} 2 Wind</small>${G.res.Wi<2?`<small>du hast ${G.res.Wi}</small>`:''}`,cls:'gold',v:'scare',disabled:G.res.Wi<2},{label:'Landen lassen',cls:'primary',v:'ok'}]);
    if(v==='scare'){G.res.Wi-=2;renderRes();toast('Die Krähen flattern davon!')}
    else await placeCrow(ev.cells);
   }
@@ -1460,7 +1630,7 @@ function scoreIsland(){
 }
 function renderLog(sel){
  const l=$(sel);l.innerHTML='';
- for(let i=0;i<4;i++){const e=G.log[i];l.appendChild(el('div','',e?`${e.name}<b>${e.pts}</b>`:`Insel ${G.cycle*4+i+1}<b>–</b>`))}
+ for(let i=0;i<4;i++){const n=G.cycle*4+i,e=G.log[n];l.appendChild(el('div','',e?`<span>${e.name}</span><b>${e.pts}</b>`:`<span>Insel ${n+1}</span><b>–</b>`))}
 }
 
 /* =================== FESTMAHL =================== */
@@ -1597,6 +1767,8 @@ const Snd=(()=>{
  }
  return{
   get on(){return on},
+  sleep(){if(!ctx||ctx.state!=='running')return;try{const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(master.gain.value,t);master.gain.linearRampToValueAtTime(0,t+.04);ctx.suspend()}catch(e){}},
+  wake(){if(!ctx)return;try{ctx.resume().then(()=>{const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setValueAtTime(0,t);master.gain.linearRampToValueAtTime(on?.85:0,t+1.2)})}catch(e){}},
   start(){try{if(!ctx)init();if(ctx.state==='suspended')ctx.resume()}catch(e){}},
   toggle(){on=!on;store.set('nimyard-music',on?'on':'off');if(!ctx&&on)this.start();if(ctx)master.gain.setTargetAtTime(on?.85:0,ctx.currentTime,.3);return on},
   base(v){base=v},
@@ -1607,6 +1779,11 @@ const Snd=(()=>{
   chime(){if(!ctx||!on)return;const t=ctx.currentTime;[880,1174.66].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f;env(g,t+i*.09,.004,.08,.5);o.connect(g);g.connect(sfx);o.start(t+i*.09);o.stop(t+.8)})},
  };
 })();
+/* iPhone: Ton beim Schließen/Wechseln der App sauber anhalten, sonst knackt oder piept der Lautsprecher */
+document.addEventListener('visibilitychange',()=>{document.hidden?Snd.sleep():Snd.wake()});
+addEventListener('pagehide',()=>Snd.sleep());
+addEventListener('freeze',()=>Snd.sleep());
+addEventListener('pageshow',e=>{if(!document.hidden)Snd.wake()});
 
 /* =================== TUTORIAL =================== */
 function miniSVG(rows,o={}){
