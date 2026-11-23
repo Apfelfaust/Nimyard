@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Nimyard – Die Blunberrey und die Früchte vom Wind</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="theme-color" content="#232b52">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Nimyard">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#24203a; --ink2:#4a4466; --paper:#fffaf2; --sky1:#bfe0f7; --sky2:#f9d9c4; --sky3:#d9c9ef;
+  --blue:#2f6db5; --blue2:#e5f0fb; --grass:#9fd36c; --grass2:#7dbb4b; --earth:#c98b5a; --earth2:#9b6238;
+  --W:#f4c542; --K:#f08a3c; --S:#9b7fd1; --P:#7fa7c9; --rock:#a7a3b0;
+  --event:#5b4a8b; --moon:#f6e7a6; --night:#1b2340;
+  --r:16px; --shadow:0 4px 0 var(--ink);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;font-family:Nunito,system-ui,sans-serif;color:var(--ink);overflow:hidden}
+body{background:linear-gradient(180deg,var(--sky1) 0%,#dfe8f7 45%,var(--sky2) 75%,var(--sky3) 100%)}
+button{font-family:inherit;cursor:pointer}
+h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
+
+/* ---------- sky decor ---------- */
+#sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.cloud{position:absolute;background:#fff;border-radius:999px;opacity:.85;filter:drop-shadow(0 3px 0 rgba(36,32,58,.08))}
+.cloud::before,.cloud::after{content:"";position:absolute;background:#fff;border-radius:50%}
+.cloud::before{width:55%;height:160%;left:15%;bottom:20%}
+.cloud::after{width:40%;height:130%;right:12%;bottom:15%}
+@keyframes drift{from{transform:translateX(-30vw)}to{transform:translateX(130vw)}}
+#abyss{position:fixed;left:0;right:0;bottom:0;height:22vh;z-index:0;pointer-events:none;
+  background:linear-gradient(180deg,rgba(27,35,64,0) 0%,rgba(27,35,64,.55) 55%,rgba(20,24,46,.92) 100%)}
+.eyes{position:absolute;left:50%;bottom:var(--b,-4vh);transform:translateX(-50%);display:flex;gap:9vh;transition:bottom 1.6s cubic-bezier(.2,.8,.2,1),opacity 1s}
+.eye{width:var(--s,9vh);height:var(--s,9vh);transition:width 1.2s,height 1.2s;border-radius:50%;background:#fff4c9;position:relative;border:3px solid var(--ink);
+  box-shadow:0 0 30px rgba(246,231,166,.6);overflow:hidden}
+.eye .pup{position:absolute;inset:18%;border-radius:50%;background:var(--night);transition:transform 1.1s ease}
+.eye .pup::after{content:"";position:absolute;width:36%;height:36%;border-radius:50%;background:var(--moon);top:12%;left:46%;box-shadow:0 0 10px var(--moon)}
+.eye .lid{position:absolute;left:-4px;right:-4px;top:-4px;bottom:-4px;background:var(--lidc,#2b3557);border-bottom:3px solid var(--ink);border-radius:0 0 48% 48%/0 0 30% 30%;transform:translateY(-106%);animation:lidblink 7s infinite}
+.eye:last-of-type .lid{animation-delay:.07s}
+@keyframes lidblink{0%,44%,52%,100%{transform:translateY(-106%)}48%{transform:translateY(0)}}
+.eyes.peek{opacity:.8}
+.eyes.jolt{animation:jolt .7s}
+@keyframes jolt{30%{transform:translateX(-50%) translateY(-2.5vh)}}
+.eyes.happy .lid{animation:none;transform:translateY(-55%);transition:transform .4s}
+.eyes.rise{bottom:6vh;opacity:1}
+.eyes.big .eye{width:17vh;height:17vh}
+.pill.bump{animation:pbump .6s}
+@keyframes pbump{40%{transform:scale(1.2);box-shadow:0 0 0 4px var(--moon)}}
+.laune{display:flex;align-items:center;gap:8px;width:100%;margin-top:8px;background:var(--night);color:#fff;border:2px solid var(--ink);border-radius:999px;padding:5px 6px 5px 12px;font-weight:800}
+.laune .mo{flex:0 0 auto;display:flex;gap:4px}
+.laune .mo i{width:13px;height:13px;border-radius:50%;background:#fff4c9;border:2px solid var(--ink);position:relative}
+.laune .mo i::after{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--moon);top:1px;left:4px;box-shadow:0 0 0 2px var(--night)}
+.laune .tx{flex:1;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.laune .st{min-width:34px;text-align:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:13px;border-radius:999px;padding:3px 9px;background:#3a4570;white-space:nowrap}
+.laune .st.ok{background:var(--grass2);color:var(--ink)}
+.laune.feast{background:#2b3557;margin-top:6px}
+.laune.feast .fr{display:inline-flex;align-items:center;gap:2px;margin-left:8px;font-family:Fredoka,Nunito,sans-serif}
+.laune.feast .fr svg{width:16px;height:16px}
+.laune.feast .fr.ok{color:#a7e07a}
+.wchip{margin-left:8px;font-size:11.5px;font-weight:800;background:#fff;border:2px solid var(--ink);border-radius:999px;padding:1px 8px;white-space:nowrap}
+.frow{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:4px 0 10px}
+.frow span{display:inline-flex;align-items:center;gap:4px;background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:4px 10px;font-weight:800}
+.frow span svg{width:20px;height:20px}
+.frow span.bad{background:#fde3e3}.frow span.ok{background:#dff3cf}
+
+/* ---------- layout ---------- */
+#app{position:relative;z-index:1;height:100%;display:flex;justify-content:center}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;overflow-y:auto;padding:max(14px,env(safe-area-inset-top)) 14px 24px}
+.screen#play{padding-bottom:24px}
+.screen.on{display:flex;animation:fadeIn .45s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wrap{width:100%;max-width:540px}
+
+.btn{border:3px solid var(--ink);background:#fff;color:var(--ink);border-radius:14px;padding:12px 18px;font-weight:800;font-size:16px;
+  box-shadow:var(--shadow);transition:transform .08s,box-shadow .08s,opacity .2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.btn.primary{background:var(--blue);color:#fff}
+.btn.gold{background:var(--moon)}
+.btn.small{padding:8px 11px;font-size:13.5px;border-radius:11px;border-width:2.5px;box-shadow:0 3px 0 var(--ink)}
+.btn:disabled{background:#ebe8f1;color:#a39fb5;border-color:#a39fb5;box-shadow:0 3px 0 #a39fb5;pointer-events:none}
+.btn:disabled svg{opacity:.45}
+.btn.block{width:100%}
+
+/* ---------- menu ---------- */
+#menu{justify-content:center}
+.title{text-align:center;margin-top:2vh}
+.title h1{font-size:clamp(54px,15vw,92px);color:var(--blue);letter-spacing:1px;line-height:.95;
+  text-shadow:0 5px 0 var(--ink),0 0 0 #fff;-webkit-text-stroke:3px var(--ink);paint-order:stroke fill}
+.title .sub{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;font-size:clamp(16px,4.6vw,22px);margin-top:12px;color:var(--ink)}
+.ship{width:min(78vw,330px);margin:8px auto 0;display:block;animation:bob 4.5s ease-in-out infinite}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-1.5deg)}50%{transform:translateY(-10px) rotate(1.5deg)}}
+.menuBtns{display:flex;flex-direction:column;gap:12px;width:min(86vw,320px);margin:14px auto 0}
+.best{text-align:center;font-weight:700;color:var(--ink2);font-size:14px;margin-top:12px;min-height:20px}
+.ver{position:absolute;bottom:10px;right:14px;font-size:11px;color:rgba(255,255,255,.7);font-weight:700}
+
+/* ---------- panels ---------- */
+.panel{background:var(--paper);border:3px solid var(--ink);border-radius:20px;box-shadow:0 6px 0 var(--ink);padding:18px}
+.panel h2{font-size:26px;color:var(--blue);margin-bottom:6px}
+.rules h3{font-size:18px;color:var(--blue);margin:16px 0 4px}
+.rules p,.rules li{font-size:15px;line-height:1.5;margin:4px 0}
+.rules ul{padding-left:20px;margin:4px 0}
+.chip{display:inline-flex;align-items:center;gap:4px;font-weight:800;white-space:nowrap}
+.chip svg{width:18px;height:18px}
+
+/* ---------- top bar ---------- */
+.topbar{display:flex;align-items:center;gap:8px;width:100%}
+.isleTitle{flex:1;min-width:0}
+.isleTitle .k{font-size:11.5px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.6px}
+.isleTitle h2{font-size:22px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pill{display:flex;align-items:center;gap:6px;background:#fff;border:2.5px solid var(--ink);border-radius:999px;padding:5px 10px;font-weight:800;font-size:14px;box-shadow:0 3px 0 var(--ink)}
+.pill.moon{background:var(--night);color:var(--moon)}
+.pill.fed{background:#c9ecb0}
+.ropes{display:flex;gap:3px}
+.ropes svg{width:16px;height:16px}
+.ropes svg.gone{opacity:.22}
+.iconbtn{width:42px;height:42px;border-radius:12px;padding:0}
+.gusts{display:flex;gap:5px;align-items:center;margin-top:3px;flex-wrap:wrap;row-gap:4px}
+.gusts .gust{flex:0 0 22px}
+.trow .fr svg{width:15px;height:15px}
+.trow .fr.ok{color:var(--grass2)}
+.gust{width:22px;height:14px;opacity:.28}
+.gust.done{opacity:1}
+.gust.now{opacity:1;animation:pulse 1.2s infinite}
+@keyframes pulse{50%{transform:scale(1.18)}}
+.resbar{display:flex;gap:8px;justify-content:center;margin:10px 0 2px;width:100%}
+.resbar{max-width:420px;margin-left:auto!important;margin-right:auto!important}
+.res{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:2px;background:#fff;color:var(--ink);border:3px solid var(--ink);border-radius:14px;box-shadow:0 4px 0 var(--ink);padding:7px 4px 6px;font-weight:800;font-family:inherit;transition:transform .12s,box-shadow .12s,background .2s}
+.res .rv{display:flex;align-items:center;gap:6px;font-family:Fredoka,Nunito,sans-serif;font-size:22px;line-height:1}
+.res svg{width:22px;height:22px}
+.res .rl{font-size:12px;white-space:nowrap;color:var(--ink2)}
+.res .rl small{font-size:10.5px;opacity:.75}
+.res:not(.off):active{transform:translateY(3px);box-shadow:0 1px 0 var(--ink)}
+.res.off{cursor:default;box-shadow:0 4px 0 #b9b4c9;border-color:#b9b4c9;background:rgba(255,255,255,.8)}
+.res.off .rl{opacity:.55}
+.res.on{background:var(--moon)}
+.res.bump{animation:bump .5s}
+@keyframes bump{40%{transform:scale(1.25);background:var(--moon)}}
+
+/* ---------- board ---------- */
+.boardWrap{position:relative;width:min(100%,400px);margin:10px auto 0;padding:0 22px 26px 22px}
+.board{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;aspect-ratio:1}
+.cell{position:relative;aspect-ratio:1}
+.cell.abyss{background:repeating-linear-gradient(-45deg,rgba(74,68,102,.0) 0 6px,rgba(74,68,102,.32) 6px 8px);
+  border-radius:4px;transform-origin:left;animation:hatch .6s ease both}
+@keyframes hatch{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+.cell.land{background:linear-gradient(180deg,var(--grass) 0 26%,#c9e7a0 26% 100%);border:2px solid var(--ink);margin:-1px}
+.cell.land.edgeB::after{content:"";position:absolute;left:-2px;right:-2px;top:100%;height:22px;z-index:0;
+  background:linear-gradient(180deg,var(--earth) 0,var(--earth2) 100%);border:2px solid var(--ink);border-top:none;
+  clip-path:polygon(0 0,100% 0,82% 55%,62% 100%,40% 70%,18% 90%)}
+.cell.land.fall::before{content:"";position:absolute;left:38%;width:24%;top:100%;height:40px;z-index:0;
+  background:linear-gradient(180deg,#8ec8f0,rgba(142,200,240,0));border-radius:0 0 8px 8px}
+.cell.rock{background:#d6d2dc;border:2px solid var(--ink);margin:-1px}
+.cell .crowi{position:absolute;inset:7%;background:#3b3557;border:2.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;animation:pop .35s}
+.cell .crowi svg,.cell .ghost svg{width:70%;height:70%}
+.cell.rock .in{position:absolute;inset:14%;background:var(--rock);border:2.5px solid var(--ink);border-radius:40% 45% 30% 35%}
+.cell.pond{background:#8ec8f0;border:2px solid var(--ink);margin:-1px}
+.cell.pond{background:radial-gradient(circle at 50% 45%,#a9d8f6 0,#7dbbe8 70%,#6aa9da 100%)}
+.pondArt{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.pondArt .wv1{animation:wave 3s ease-in-out infinite}.pondArt .wv2{animation:wave 3s ease-in-out infinite 1.5s}
+@keyframes wave{50%{transform:translateX(5px);opacity:.35}}
+.pondArt .frog{transform-origin:44px 60px;animation:frogBob 4s ease-in-out infinite}
+@keyframes frogBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-1.5px)}92%{transform:translateY(0) scaleY(1)}95%{transform:translateY(-3px) scaleY(1.05)}}
+@keyframes ripple{50%{transform:scale(1.25);opacity:.2}}
+.cell .fruit{position:absolute;inset:7%;border:2.5px solid var(--ink);border-radius:10px;display:flex;align-items:center;justify-content:center;z-index:2;animation:pop .35s cubic-bezier(.3,1.6,.5,1)}
+.cell .fruit svg{width:72%;height:72%}
+@keyframes pop{from{transform:scale(.2)}to{transform:scale(1)}}
+.cell .ghost{position:absolute;inset:7%;border:3px dashed var(--ink);border-radius:10px;z-index:3;opacity:.82;display:flex;align-items:center;justify-content:center}
+.cell .ghost svg{width:62%;height:62%;opacity:.8}
+.cell .ghost.bad{background:rgba(229,72,72,.55)!important;border-color:#a81e1e}
+.cell.target{cursor:pointer}
+.cell .tgt{pointer-events:none;position:absolute;inset:4%;border:3px solid #fff;border-radius:10px;box-shadow:0 0 0 3px var(--blue);z-index:4;animation:pulse 1s infinite}
+.cell .fruit.grp{box-shadow:0 0 0 3px #fff,0 0 0 6px var(--moon)}
+.lineMark{position:absolute;font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:700;font-size:15px;color:var(--ink);display:flex;align-items:center;justify-content:center;z-index:5}
+.lineMark.star{color:#d89a00;font-size:20px;text-shadow:0 2px 0 var(--ink)}
+.lineMark.pick{cursor:pointer;background:var(--moon);border:2px solid var(--ink);border-radius:8px;animation:pulse 1s infinite}
+.lineMark.full{color:var(--grass2)}
+
+/* ---------- hint & actions ---------- */
+.hint{min-height:22px;text-align:center;font-weight:800;font-size:15px;margin:4px 0 6px;color:var(--ink)}
+.actions{display:flex;gap:7px;justify-content:center;flex-wrap:wrap;margin-bottom:8px}
+.hand{display:flex;gap:8px;justify-content:center;width:100%;padding:6px 2px 4px;overflow-x:auto}
+.jokers{display:flex;gap:6px;justify-content:center;flex-wrap:nowrap;margin:2px 0 4px}
+.jokers .btn.small{flex:1 1 0;min-width:0;padding:6px 3px;font-size:12px;gap:3px;white-space:nowrap;justify-content:center}
+.jokers{width:100%;max-width:420px;margin-left:auto!important;margin-right:auto!important}
+.card .bot{white-space:nowrap}
+.jokers:empty{display:none}
+
+/* ---------- seed card ---------- */
+.card{flex:0 0 auto;width:min(29vw,150px);aspect-ratio:63/88;background:#fff;border:3px solid var(--ink);border-radius:13px;
+  box-shadow:0 4px 0 var(--ink);display:flex;flex-direction:column;overflow:hidden;cursor:pointer;transition:transform .18s,box-shadow .18s;position:relative}
+.hand.many .card{width:min(22vw,124px)}
+.cback{position:absolute;inset:0;border-radius:10px;background:radial-gradient(circle at 50% 45%,#5b8fd1 0,#2f6db5 45%,#1b2f5e 100%);display:flex;align-items:center;justify-content:center;z-index:3;pointer-events:none}
+.cback svg{width:58%;height:auto;opacity:.95}
+.cback.ev{background:radial-gradient(circle at 50% 45%,#8a76c4 0,#5b4a8b 55%,#2e2550 100%)}
+.tableRow{display:flex;align-items:center;gap:10px;width:100%;margin:6px 0 4px}
+.tableRow .mid{flex:1;min-width:0}
+.deck{flex:0 0 auto;width:58px;aspect-ratio:63/88;position:relative;border:3px solid var(--ink);border-radius:10px;
+  box-shadow:3px 3px 0 #fff,5px 5px 0 var(--ink),8px 8px 0 #fff,10px 10px 0 var(--ink);margin:0 10px 10px 2px}
+.deck .cback{border-radius:7px}
+.deck .n{position:absolute;right:-12px;top:-12px;z-index:4;background:#fff;border:2.5px solid var(--ink);border-radius:999px;font-weight:800;font-size:12px;padding:1px 7px}
+.deck .lbl{position:absolute;left:50%;bottom:-24px;transform:translateX(-50%);font-size:11px;font-weight:800;white-space:nowrap;color:var(--ink2)}
+.deck.shuffle{animation:wobble .4s 3}
+.flyer{position:fixed;z-index:40;pointer-events:none;margin:0}
+.card.sel{transform:translateY(-10px);box-shadow:0 10px 0 var(--ink),0 0 0 4px var(--moon)}
+.card.swap{animation:wobble .5s infinite}
+@keyframes wobble{25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+.card .top{display:flex;justify-content:space-between;align-items:center;padding:5px 7px;color:#fff;font-weight:800;font-size:12px}
+.card .badge{width:22px;height:22px;border-radius:50%;background:#fff;border:2px solid var(--ink);display:flex;align-items:center;justify-content:center}
+.card .badge svg{width:16px;height:16px}
+.card .nm{text-align:center;font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:600;font-size:12.5px;padding:4px 2px 0;line-height:1.1}
+.card .shape{flex:1;display:flex;align-items:center;justify-content:center}
+.card .shape .g{display:grid;gap:0}
+.card .shape .g i{width:min(4.6vw,22px);height:min(4.6vw,22px);border:2px solid var(--ink);margin:-1px;border-radius:4px}
+.hand.many .card .shape .g i{width:min(3.6vw,18px);height:min(3.6vw,18px)}
+.card .bot{background:var(--blue2);border-top:2px solid var(--ink);padding:5px 6px;display:flex;align-items:center;justify-content:center;gap:5px;font-weight:800;font-size:11.5px}
+.card .bot svg{width:16px;height:16px}
+
+/* ---------- island choice ---------- */
+.choices{display:flex;flex-direction:column;gap:12px;width:100%;margin-top:12px}
+.icard{display:flex;gap:12px;align-items:stretch;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:0 5px 0 var(--ink);padding:12px;cursor:pointer;text-align:left;color:var(--ink);font:inherit;width:100%;animation:slideIn .5s ease-out;transition:transform .15s}
+@keyframes slideIn{from{transform:translateY(24px)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+.icard:hover{transform:translateY(-3px)}
+.icard .mini{flex:0 0 96px;display:grid;grid-template-columns:repeat(5,1fr);aspect-ratio:1;align-self:center}
+.icard .mini i{aspect-ratio:1}
+.icard .mini i.l{background:var(--grass);border:1.5px solid var(--ink);margin:-.75px}
+.icard .mini i.r{background:var(--rock);border:1.5px solid var(--ink);margin:-.75px}
+.icard .mini i.p{background:#8ec8f0;border:1.5px solid var(--ink);margin:-.75px}
+.icard h3{font-size:20px}
+.icard .meta{font-weight:800;font-size:13px;color:var(--blue);margin:2px 0 6px;display:flex;gap:10px;align-items:center}
+.icard p{margin:0;font-size:14px;line-height:1.4}
+
+/* ---------- modal ---------- */
+#modal{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(27,35,64,.55);backdrop-filter:blur(2px)}
+#modal.on{display:flex}
+.mcard{width:min(92vw,380px);background:var(--paper);border:3px solid var(--ink);border-radius:22px;box-shadow:0 8px 0 var(--ink);overflow:hidden;animation:flip .55s cubic-bezier(.3,1.3,.5,1)}
+@keyframes flip{from{transform:perspective(800px) rotateY(80deg) scale(.8);opacity:0}}
+.mcard .mh{padding:14px 18px;color:#fff;background:var(--event)}
+.mcard .mh .k{font-size:12px;font-weight:800;letter-spacing:.8px;opacity:.85}
+.mcard .mh h2{font-size:26px}
+.mcard .art{display:flex;justify-content:center;padding:14px 0 0}
+.mcard .art svg{width:110px;height:80px}
+.mcard .mb{padding:10px 18px 4px;font-size:16px;line-height:1.45}
+.mcard .mf{display:flex;flex-direction:column;gap:9px;padding:14px 18px 18px}
+
+/* ---------- score ---------- */
+.tally{margin-top:10px}
+.trow{display:flex;justify-content:space-between;align-items:center;padding:9px 2px;border-bottom:2px dashed rgba(36,32,58,.18);font-size:15.5px;opacity:0;animation:fadeIn .4s forwards}
+.trow b{font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:19px}
+.trow.sum{border-bottom:none;font-size:18px;font-weight:800}
+.trow.sum b{font-size:28px;color:var(--blue)}
+.minus{color:#c43d3d}
+.log{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.log div{background:#fff;border:2.5px solid var(--ink);border-radius:12px;padding:6px;text-align:center;font-size:12px;font-weight:700}
+.log div b{display:block;font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:20px;color:var(--blue)}
+
+/* ---------- final ---------- */
+#final{justify-content:flex-start}
+#final .panel{margin-top:6vh;text-align:center}
+.verdict{font-family:Fredoka,Nunito,system-ui,sans-serif;font-weight:700;font-size:30px;margin:6px 0}
+.vs{display:flex;justify-content:center;gap:16px;margin:14px 0}
+.vs div{background:#fff;border:3px solid var(--ink);border-radius:14px;padding:8px 14px;font-weight:800;min-width:110px}
+.vs div b{display:block;font-family:Fredoka,Nunito,system-ui,sans-serif;font-size:32px}
+.vs .m{background:var(--night);color:var(--moon)}
+.vs .m .ropes svg{width:26px;height:26px}
+.vs .m .ropes svg path,.vs .m .ropes svg circle{stroke:#f6e7a6}
+
+.toast{position:fixed;left:50%;top:calc(env(safe-area-inset-top) + 10px);transform:translateX(-50%);z-index:60;background:#fff;border:3px solid var(--ink);border-radius:999px;padding:8px 16px;font-weight:800;box-shadow:0 4px 0 var(--ink);animation:toast 1.6s forwards;pointer-events:none;display:flex;gap:6px;align-items:center;white-space:nowrap}
+.toast svg{width:18px;height:18px}
+@keyframes toast{0%{opacity:0;transform:translate(-50%,10px)}15%,75%{opacity:1;transform:translate(-50%,0)}100%{opacity:0;transform:translate(-50%,-16px)}}
+.btn svg{width:18px;height:18px;flex:0 0 auto}
+.playArea{display:flex;gap:4px;align-items:flex-start;justify-content:center;width:100%;margin-top:10px}
+.boardWrap{flex:1 1 auto;width:auto;max-width:min(400px,calc(46vh + 44px));margin:0}
+.deckCol{flex:0 0 auto;display:flex;flex-direction:column;gap:12px;padding-top:2px}
+.dk{display:flex;flex-direction:column;align-items:center;gap:4px;font-size:10.5px;font-weight:800;color:var(--ink2)}
+.deckCol .deck{width:50px;margin:0 8px 6px 0}
+.deck .cback.wb{background:radial-gradient(circle at 50% 45%,#9fd0f5 0,#4f9be0 50%,#2c5f9e 100%)}
+.deck .cback.ib{background:radial-gradient(circle at 50% 45%,#bfe6a0 0,#7dbb4b 50%,#4d7f2c 100%)}
+.deck .cback.ib svg{width:72%}
+.wface{position:absolute;inset:0;border-radius:7px;background:linear-gradient(180deg,#4f9be0,#2f6db5);display:none;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#fff;z-index:2;cursor:pointer}
+.wface.on{display:flex}
+.wface svg{width:68%;height:auto}
+.wface span{font-size:8.5px;font-weight:800;line-height:1.05;text-align:center;padding:0 2px}
+.cell.sea{border:2px dashed rgba(74,68,102,.18);border-radius:6px;margin:3px}
+.islScene{position:fixed;inset:0;z-index:70;background:rgba(27,35,64,.6);backdrop-filter:blur(2px);animation:fadeIn .4s}
+.islScene .head{position:absolute;left:0;right:0;top:9vh;text-align:center;color:#fff;padding:0 16px}
+.islScene .head h2{font-size:26px;text-shadow:0 2px 0 #24203a}
+.islScene .head div{font-size:14px;font-weight:700;margin-top:6px;color:var(--moon)}
+.icv{container-type:inline-size;position:fixed;width:min(30vw,150px);aspect-ratio:63/112;background:#fff;border:3px solid var(--ink);border-radius:14px;box-shadow:0 5px 0 var(--ink);overflow:hidden;display:flex;flex-direction:column;cursor:pointer;z-index:71}
+.icv .ih{background:linear-gradient(180deg,#7dbb4b,#4d7f2c);color:#fff;padding:6px 7px;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:max(13px,8.8cqw);line-height:1.1;padding:4cqw 5cqw}
+.icv .ih small{display:block;font-family:Nunito,sans-serif;font-size:max(9.5px,6.4cqw);opacity:.9}
+.icv .im{display:grid;grid-template-columns:repeat(5,1fr);width:72%;margin:8px auto 4px;aspect-ratio:1}
+.icv .im i.l{background:var(--grass);border:1.5px solid var(--ink);margin:-.75px}
+.icv .im i.r{background:var(--rock);border:1.5px solid var(--ink);margin:-.75px}
+.icv .im i.p{background:#8ec8f0;border:1.5px solid var(--ink);margin:-.75px}
+.icv .it{font-size:max(9.8px,7cqw);line-height:1.25;padding:4px 7px 7px;flex:1;overflow:hidden}
+.icv .cback{border-radius:10px;z-index:3}
+.icv:hover{filter:brightness(1.04)}
+#tut .panel{text-align:center}
+.slide{display:none;flex-direction:column;align-items:center;gap:10px;animation:fadeIn .35s}
+.slide.on{display:flex}
+.slide h2{font-size:26px}
+.slide p{font-size:16px;line-height:1.5;margin:0;max-width:380px}
+.slide .ill{min-height:190px;display:flex;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap}
+.slide .card{width:92px;animation:none;cursor:default}
+.slide .card .shape .g i{width:14px;height:14px}
+.slide .card .nm{font-size:11px}.slide .card .bot{font-size:10px}
+.dots{display:flex;gap:7px;justify-content:center;margin:14px 0 4px}
+.dots i{width:10px;height:10px;border-radius:50%;background:#cfcbe0;border:2px solid var(--ink)}
+.dots i.on{background:var(--blue)}
+.tutNav{display:flex;gap:10px;margin-top:10px}
+.tutNav .btn{flex:1}
+.key{display:inline-block;background:var(--moon);border:2px solid var(--ink);border-radius:8px;padding:0 6px;font-weight:800}
+/* --- Moon erwacht (cinematic) --- */
+#cine{position:fixed;inset:0;z-index:80;background:#05060c;opacity:0;pointer-events:none;transition:opacity 1s ease;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px}
+#cine.on{opacity:1;pointer-events:auto}
+#cine .cReqs{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;max-width:90vw;min-height:44px}
+#cine .cTitle{font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:clamp(28px,8vw,44px);color:var(--moon);letter-spacing:1px;opacity:0;transition:opacity 1.4s;text-shadow:0 0 24px rgba(246,231,166,.35)}
+#cine.s1 .cTitle{opacity:1}
+.mEyes{display:flex;gap:7vh}
+#cine .ce{width:14vh;height:14vh;border:4px solid #0b0c14;box-shadow:none;transition:border-color 1.5s,box-shadow 1.5s}
+#cine .ce .lid{animation:none;transform:translateY(0);background:#07080e;border-bottom-color:#07080e}
+#cine.s1 .ce{border-color:#0b0c14}
+#cine.s2 .ce{border-color:#24203a;box-shadow:0 0 40px rgba(246,231,166,.45)}
+#cine.s2 .ce .lid{border-bottom-color:#3a3458}
+#cine .ce .pup{transition:none}
+@keyframes wakeLid{0%{transform:translateY(0)}14%{transform:translateY(-16%)}24%{transform:translateY(-3%)}40%{transform:translateY(-34%)}50%{transform:translateY(-27%)}58%{transform:translateY(0)}70%{transform:translateY(-48%)}80%{transform:translateY(-41%)}93%{transform:translateY(-108%)}100%{transform:translateY(-106%)}}
+.moonCard .eye .pup{transform:translateY(-14%)}
+.reqChip{display:inline-flex;align-items:center;gap:6px;background:#fff;color:var(--ink);border:3px solid #24203a;border-radius:14px;padding:6px 12px;font-weight:800;font-size:17px}
+.reqChip svg{width:22px;height:22px}
+.reqChip.pts{background:var(--moon)}
+#cine .reqChip{animation:reqIn .9s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes reqIn{from{opacity:0;transform:translateY(16px) scale(.7)}}
+.moonWrap{position:fixed;left:50%;top:50%;z-index:75;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:16px;width:min(94vw,470px)}
+.moonCard{width:100%;aspect-ratio:88/63;background:radial-gradient(circle at 50% 35%,#2b3557,#1b2340 60%,#0f1428);border:10px solid #fff;border-radius:24px;box-shadow:0 0 0 3px #24203a,0 18px 50px rgba(0,0,0,.45);padding:12px 14px;display:grid;grid-template-rows:auto auto 1fr auto auto;justify-items:center;align-items:center;gap:6px;color:#fff;text-align:center}
+.moonCard .k{font-size:11px;font-weight:800;letter-spacing:.8px;color:var(--moon);opacity:.85}
+.moonCard h2{font-size:clamp(18px,5vw,24px);color:var(--moon);line-height:1.1}
+.moonCard .mEyes{gap:4vh}.moonCard .eye{width:min(9vh,64px);height:min(9vh,64px)}
+.moonCard p{margin:0;font-size:12.5px;opacity:.9;line-height:1.3}
+.moonCard .cReqs{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.moonCard .reqChip{font-size:13px;padding:2px 8px;border-width:2.5px}
+.moonCard .reqChip svg{width:17px;height:17px}
+.moonWrap.drop{transition:transform .9s cubic-bezier(.6,-.2,.8,.4);transform:translate(-50%,120vh) rotate(6deg)}
+/* --- Wetter --- */
+.wxScene{position:fixed;inset:0;z-index:70;background:rgba(27,35,64,.55);backdrop-filter:blur(2px);animation:fadeIn .4s}
+.wdeck{position:relative;width:70px;aspect-ratio:63/88;border:3px solid var(--ink);border-radius:10px;box-shadow:3px 3px 0 #fff,5px 5px 0 var(--ink),8px 8px 0 #fff,10px 10px 0 var(--ink)}
+.wdeck .n{position:absolute;right:-12px;top:-12px;z-index:4;background:#fff;border:2.5px solid var(--ink);border-radius:999px;font-weight:800;font-size:12px;padding:1px 7px}
+.wback{position:absolute;inset:0;border-radius:7px;background:radial-gradient(circle at 50% 45%,#9fd0f5 0,#4f9be0 50%,#2c5f9e 100%);display:flex;align-items:center;justify-content:center}
+.wback svg{width:60%}
+.wcard{width:min(58vw,220px);aspect-ratio:63/88;background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:0 6px 0 var(--ink);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.wcard .wh{background:linear-gradient(180deg,#4f9be0,#2f6db5);color:#fff;padding:10px 12px}
+.wcard .wh .k{font-size:10.5px;font-weight:800;letter-spacing:.8px;opacity:.85}
+.wcard .wh h3{font-size:22px}
+.wcard .wa{flex:1;display:flex;align-items:center;justify-content:center;background:linear-gradient(180deg,#dcebf7,#fff)}
+.wcard .wa svg{width:62%;height:auto}
+.wcard .wt{padding:10px 12px;font-size:14px;line-height:1.35;border-top:2px solid var(--ink);background:var(--blue2);font-weight:700}
+.gustRow{display:flex;justify-content:center;align-items:center;gap:5px;font-size:12px;font-weight:800;color:var(--ink2);margin:8px 0 4px}
+.gustRow .gust{flex:0 0 22px}
+/* --- Zunge & Sprung --- */
+.tongueWrap{position:absolute;left:50%;bottom:-2vh;width:5vh;height:6vh;margin-left:-2.5vh;overflow:visible;pointer-events:none}
+.tongue{width:100%;height:100%;background:#f08aa6;border:3px solid #24203a;border-radius:45% 45% 50% 50%/40% 40% 60% 60%;transform:translateY(130%);position:relative}
+.tongue::after{content:"";position:absolute;left:50%;top:15%;bottom:35%;border-left:2px solid #c25577}
+.eyes.lick .tongue{animation:lick 2s ease-in-out}
+@keyframes lick{0%{transform:translateY(130%)}18%{transform:translateY(-25%) rotate(-14deg)}38%{transform:translateY(-30%) rotate(14deg)}58%{transform:translateY(-25%) rotate(-10deg)}78%{transform:translateY(-10%) rotate(6deg)}100%{transform:translateY(130%)}}
+.eyes.pounce{bottom:12vh!important;transition:bottom .45s cubic-bezier(.2,1.6,.4,1)}
+.eyes.pounce .eye{width:18vh;height:18vh}
+@keyframes shake{20%{transform:translate(-6px,3px)}40%{transform:translate(6px,-3px)}60%{transform:translate(-4px,2px)}80%{transform:translate(4px,-2px)}}
+#app.shake{animation:shake .5s}
+.eyes.hide{opacity:0!important}
+.handRow{display:flex;align-items:center;gap:8px;width:100%;justify-content:center}
+.handRow .deckCol{flex:0 0 auto;display:flex;flex-direction:column;gap:9px;padding:6px 0 0}
+.handRow .dk{gap:0}
+.handRow .dk>span{display:none}
+.handRow .deckCol .deck{width:34px;margin:0 6px 4px 0;border-width:2.5px;box-shadow:2px 2px 0 #fff,3.5px 3.5px 0 var(--ink),5px 5px 0 #fff,6.5px 6.5px 0 var(--ink)}
+.handRow .deck .n{font-size:9.5px;padding:0 5px;right:-9px;top:-9px;border-width:2px}
+.handRow .hand{flex:1 1 auto;min-width:0;justify-content:flex-start}
+.handRow .card{width:min(25vw,138px)}
+.handRow .hand.many .card{width:min(19vw,118px)}
+.boardWrap{margin:10px auto 0!important}
+.moonCard.inTable{display:none;width:min(100%,430px);margin:22px auto 8px;position:relative}
+.moonCard.inTable.on{display:grid}
+.inTable .eye{width:var(--ds,54px);height:var(--ds,54px);transition:width 1.2s,height 1.2s}
+.inTable .mEyes{position:relative;gap:28px}
+.inTable .tongueWrap{left:50%;bottom:-14px;width:20px;height:26px;margin-left:-10px}
+.inTable .tongue{opacity:0;transform:none}
+.inTable.lick .tongue{animation:dlick 2s ease-in-out}
+@keyframes dlick{0%{opacity:0;transform:translateY(-50%) scaleY(.2)}15%{opacity:1;transform:translateY(0) rotate(-16deg)}35%{transform:translateY(10%) rotate(16deg)}55%{transform:translateY(5%) rotate(-12deg)}80%{opacity:1;transform:translateY(0) rotate(6deg)}100%{opacity:0;transform:translateY(-50%) scaleY(.2)}}
+.inTable.happy .lid{animation:none;transform:translateY(-55%);transition:transform .4s}
+.inTable.jolt{animation:tjolt .7s}
+@keyframes tjolt{25%{transform:translateY(-12px) scale(1.03)}50%{transform:none}70%{transform:translateY(-5px)}}
+.inTable .reqChip.ok{background:#c9ecb0}
+.inTable .reqChip.risk{background:#f7c6c6}
+/* --- Ereignis groß --- */
+.evScene{position:fixed;inset:0;z-index:70;background:rgba(27,35,64,.55);backdrop-filter:blur(2px);animation:fadeIn .3s}
+.evBig{position:fixed;left:5vw;top:50%;width:min(62vw,270px);transform:translateY(-50%);background:#fff;border:3px solid var(--ink);border-radius:16px;box-shadow:0 6px 0 var(--ink);overflow:hidden;z-index:71}
+.evBig .eh{background:var(--event);color:#fff;padding:10px 12px}
+.evBig .eh .k{font-size:10.5px;font-weight:800;letter-spacing:.8px;opacity:.85}
+.evBig .eh h3{font-size:21px}
+.evBig .ea{display:flex;justify-content:center;padding:10px 0 2px;background:#efe9f7}
+.evBig .ea svg{width:110px;height:80px}
+.evBig .et{padding:10px 12px 14px;font-size:14px;line-height:1.4}
+.evBtns{position:fixed;right:3vw;top:50%;transform:translateY(-50%);z-index:72;width:min(28vw,150px);display:flex;flex-direction:column;gap:10px;animation:fadeIn .4s}
+.evBtns .btn{width:100%;white-space:normal;line-height:1.2}
+.card .shape svg{width:84%;height:auto}
+@media (min-width:900px){.boardWrap{width:420px}}
+
+/* Karten skalieren mit ihrer eigenen Breite */
+.card{container-type:inline-size}
+.card .top{font-size:max(9px,9.5cqw);padding:4cqw 5.5cqw}
+.card .badge{width:17cqw;height:17cqw;border-width:max(1.5px,1.5cqw)}
+.card .badge svg{width:12.5cqw;height:12.5cqw}
+.card .nm{font-size:max(9px,10.5cqw);padding:3cqw 2cqw 0}
+.card .nm .fn{display:block;font-size:max(8px,9cqw);font-family:Nunito,system-ui,sans-serif;font-weight:800;color:#6b6684;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .shape .g i,.hand.many .card .shape .g i{width:14.5cqw;height:14.5cqw;border-width:max(1.5px,1.6cqw);border-radius:3cqw}
+.card .bot{font-size:max(8px,9cqw);padding:3.5cqw 3cqw;gap:3cqw}
+.card .bot svg{width:12cqw;height:12cqw;flex:0 0 12cqw}
+.handRow .hand{container-type:inline-size;padding:12px 2px 6px}
+.handRow .card{width:min(calc((100cqw - 20px) / 3),138px)}
+.handRow .hand.many .card{width:min(calc((100cqw - 28px) / 4),118px)}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div id="abyss"><div class="eyes peek" id="eyes"><div class="eye"><i class="pup"></i><b class="lid"></b></div><div class="tongueWrap"><div class="tongue"></div></div><div class="eye"><i class="pup"></i><b class="lid"></b></div></div></div>
+
+<div id="app">
+  <!-- MENU -->
+  <section class="screen on" id="menu">
+    <div class="title">
+      <h1>Nimyard</h1>
+      <div class="sub">Die Blunberrey und die Früchte vom Wind</div>
+    </div>
+    <svg class="ship" viewBox="0 0 320 230" id="shipArt"></svg>
+    <div class="menuBtns">
+      <button class="btn primary" id="bStart">Reise beginnen</button>
+      <button class="btn" id="bTut">So geht's</button>
+      <button class="btn small" id="bMusic" style="align-self:center"></button>
+    </div>
+    <div class="best" id="best"></div>
+    <div class="ver">Prototyp v0.1</div>
+  </section>
+
+  <!-- RULES -->
+  <section class="screen" id="rules">
+    <div class="wrap">
+      <div class="panel rules">
+        <h2>Spielregeln</h2>
+        <p>Du bist der einsame Farmer der <b>Blunberrey</b>, eines fliegenden Bauernhofs. Du reist zu fliegenden Inseln und bepflanzt sie mit Samen, die dir der Wind bringt. Tief im Abgrund lauert <b>Moon</b>.</p>
+        <h3>Reise & Mondzyklen</h3>
+        <ul>
+          <li>Wähle eine kurze (4), lange (8) oder große Reise (12 Inseln). Alle 4 Inseln ist <b>Vollmond</b>: Moon kommt zum <b>Festmahl</b>.</li>
+          <li>Zu jedem Zyklus erscheint ein anderer Moon mit eigenen Wünschen, zum Beispiel ☾ 135 Punkte und 25 Kürbisfelder. Oben siehst du, wie weit du bist.</li>
+          <li>Jede Insel füllt deine <b>Vorratskammer</b> (✦). Beim Festmahl frisst Moon sie leer.</li>
+          <li>Fehlen ihm Punkte oder Früchte (je fehlende Frucht zählt 3), beißt er für je angefangene 15 fehlende Punkte eins deiner <b>3 Ankerseile</b> durch (14 fehlen = 1 Seil, 16 fehlen = 2 Seile). Unten auf seiner Karte siehst du jederzeit, wie viele Seile gerade in Gefahr wären. Reißt das letzte, zieht er dich in den Abgrund.</li>
+          <li>Jedes „Moon schnüffelt“ macht ihn 4 hungriger.</li>
+        </ul>
+        <h3>Wetter</h3>
+        <ul>
+          <li>Vor jeder Insel dreht der Wind: bei Westwind musst du in jeder Böe einen Nicht-Kürbis zurück unter den Stapel wehen und neu ziehen, Sturm mehr Samen, Pollenflug macht Gruppen leichter und so weiter.</li>
+        </ul>
+        <h3>Krähen</h3>
+        <ul>
+          <li>Im Windstapel stecken 4 Krähen-Schwärme (2–3 Felder groß). Wird einer gezogen, setzt du ihn sofort auf <b>bepflanzte Felder</b> – drehen und spiegeln ist erlaubt.</li>
+          <li>Die Krähen stehlen die Saat: Die Felder darunter werden wieder leer. Du kannst sie später neu bepflanzen.</li>
+          <li>Mit 2 Wind kannst du einen Schwarm wegpusten, bevor er landet.</li>
+          <li>Ist auf deiner Insel noch nichts gepflanzt, ziehen die Krähen weiter.</li>
+        </ul>
+        <h3>Eine Böe</h3>
+        <ul>
+          <li>Der Wind bringt dir 3 Karten. Ist ein Ereignis dabei, wird es ausgeführt, sobald deine Hand vollständig ist, und danach eine Ersatzkarte gezogen.</li>
+          <li>Wähle eine Karte und setz ihre Form auf die Insel. Mit <b>Drehen</b> und <b>Spiegeln</b> passt du sie an, mit <b>Pflanzen</b> bestätigst du.</li>
+          <li>Die anderen Karten werden abgeworfen und bringen ihre Ressource.</li>
+          <li>Passt keine Form, wirfst du alle ab.</li>
+        </ul>
+        <h3>Joker</h3>
+        <ul>
+          <li><span class="chip" data-i="Wi"></span> <b>1 Wind:</b> Eine Karte gegen eine neue tauschen.</li>
+          <li><span class="chip" data-i="Wa"></span> <b>2 Wasser:</b> Nach dem Pflanzen wächst die Form um 1 Feld.</li>
+          <li><span class="chip" data-i="Du"></span> <b>2 Dünger:</b> Eine volle Zeile oder Spalte bekommt einen Stern und zählt doppelt.</li>
+        </ul>
+        <h3>Wertung pro Insel</h3>
+        <ul>
+          <li><b>Volle Zeile/Spalte:</b> 1 Punkt pro bepflanztem Feld (Felsen zählen als erledigt). Linien mit nur einem Feld zählen nicht.</li>
+          <li><b>Fruchtgruppe</b> ab 4 zusammenhängenden Feldern gleicher Frucht: +3</li>
+          <li><b>Leeres Inselfeld:</b> –1</li>
+          <li>Dazu die <b>Sonderregel</b> der Insel.</li>
+        </ul>
+        <h3>Ende</h3>
+        <p>Hast du nach dem letzten Festmahl noch mindestens ein Ankerseil, hast du gewonnen. Je mehr Seile übrig sind, desto besser.</p>
+        <p style="color:#8a86a0;font-size:13px">Prototyp: Alle Zahlen sind Testwerte.</p>
+        <button class="btn primary block" style="margin-top:12px" data-go="back">Zurück</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TUTORIAL -->
+  <section class="screen" id="tut">
+    <div class="wrap">
+      <div class="panel">
+        <div id="slides"></div>
+        <div class="dots" id="dots"></div>
+        <div class="tutNav"><button class="btn" id="tPrev">‹ Zurück</button><button class="btn primary" id="tNext">Weiter ›</button></div>
+        <button class="btn small" id="tSkip" style="margin-top:12px;background:transparent;box-shadow:none;border-color:transparent;text-decoration:underline">Überspringen</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLAY -->
+  <section class="screen" id="play">
+    <div class="wrap">
+      <div class="topbar">
+        <div class="isleTitle">
+          <div class="k" id="pK">Insel 1 von 4</div>
+          <h2 id="pName">Stille Lichtung</h2>
+          <div class="ropes" id="ropesTop" style="margin-top:4px" title="Ankerseile"></div>
+        </div>
+                <div class="pill" id="livePill" title="Vorrat · diese Insel"><span>✦</span><span id="vorrat">0</span><span id="live" style="font-size:12px"></span></div>
+        <button class="btn iconbtn" id="bPause" aria-label="Menü">☰</button>
+      </div>
+      <div class="playArea">
+        <div class="boardWrap"><div class="board" id="board"></div></div>
+      </div>
+      <div class="resbar">
+        <button class="res" id="rWa"></button><button class="res" id="rDu"></button><button class="res" id="rWi"></button>
+      </div>
+      <div class="tableRow">
+        <div class="mid"><div class="jokers" id="jokers"></div><div class="hint" id="hint"></div><div class="actions" id="actions"></div></div>
+      </div>
+      <div class="handRow">
+          <div class="deckCol">
+          <div class="dk"><div class="deck" id="wdeck"><div class="cback wb"><svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg></div><div class="wface" id="wface"></div><span class="n" id="wN">10</span></div><span>Wind</span></div>
+          <div class="dk"><div class="deck" id="ideck"><div class="cback ib"><svg viewBox="0 0 30 24"><path d="M4 9h22l-3 5H7z" fill="#9fd36c" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 14h16l-5 7-3-3-3 4z" fill="#c98b5a" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg></div><span class="n" id="iN">11</span></div><span>Inseln</span></div>
+          <div class="dk"><div class="deck" id="deck"><div class="cback"><svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg></div><span class="n" id="deckN">0</span></div><span>Früchte</span></div>
+        </div>
+        <div class="hand" id="hand"></div>
+      </div>
+      <div class="gustRow" id="gusts"></div>
+      <div class="moonCard inTable" id="moonDock"><div class="k" id="dK"></div><div class="cReqs" id="dReqs"></div><div class="mEyes"><div class="eye"><i class="pup"></i><b class="lid"></b></div><div class="tongueWrap"><div class="tongue"></div></div><div class="eye"><i class="pup"></i><b class="lid"></b></div></div><h2 id="dName"></h2><p id="dText"></p></div>
+    </div>
+  </section>
+
+  <!-- SCORE -->
+  <section class="screen" id="score">
+    <div class="wrap">
+      <div class="panel">
+        <div class="isleTitle"><div class="k" id="sK">Insel abgeerntet</div></div>
+        <h2 id="sName"></h2>
+        <div class="tally" id="tally"></div>
+        <div class="log" id="log"></div>
+        <button class="btn primary block" style="margin-top:16px" id="bNext">Weiterreisen</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- FINAL / FEAST -->
+  <section class="screen" id="final">
+    <div class="wrap">
+      <div class="panel" style="text-align:center">
+        <div class="isleTitle"><div class="k" id="fK">Vollmond</div></div>
+        <h2 id="fTitle">Moons Festmahl</h2>
+        <div class="vs"><div>Dein Vorrat<b id="fTotal">0</b></div><div class="m">Moon will<b id="fHungerV">0</b></div></div>
+        <div class="frow" id="fFruits"></div>
+        <p id="fRule" style="margin:0 0 10px;font-size:14px;font-weight:700;color:#4a4466"></p>
+        <div class="vs" style="margin-top:0"><div class="m" style="min-width:180px">Ankerseile<b id="fRopes" class="ropes" style="justify-content:center;border:0;margin:6px 0 0;padding:0"></b></div></div>
+        <div class="verdict" id="verdict"></div>
+        <p id="vText" style="font-size:16px;line-height:1.45;margin:4px 0 0"></p>
+        <div class="log" id="flog"></div>
+        <div id="fBtns" style="display:flex;flex-direction:column;gap:10px;margin-top:16px"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div id="modal"></div>
+<div id="cine"><div class="cReqs" id="cReqs"></div><div class="cTitle">Moon erwacht…</div><div class="mEyes"><div class="eye ce"><i class="pup"></i><b class="lid"></b></div><div class="eye ce"><i class="pup"></i><b class="lid"></b></div></div></div>
+
+<script>
+/* =================== DATA =================== */
+const SEEDS=[[1,"Halm",[[0,0],[0,1],[0,2]],"W","Du"],[2,"Halm",[[0,0],[0,1],[0,2]],"K","Du"],[3,"Halm",[[0,0],[0,1],[0,2]],"S","Wa"],[4,"Halm",[[0,0],[0,1],[0,2]],"P","Du"],[5,"Halm",[[0,0],[0,1],[0,2]],"W","Wa"],[6,"Winkel",[[0,0],[0,1],[1,1]],"K","Wi"],[7,"Winkel",[[0,0],[0,1],[1,1]],"S","Wa"],[8,"Winkel",[[0,0],[0,1],[1,1]],"P","Wa"],[9,"Winkel",[[0,0],[0,1],[1,1]],"W","Du"],[10,"Winkel",[[0,0],[0,1],[1,1]],"K","Du"],[11,"Stab",[[0,0],[0,1],[0,2],[0,3]],"S","Wi"],[12,"Stab",[[0,0],[0,1],[0,2],[0,3]],"P","Wi"],[13,"Stab",[[0,0],[0,1],[0,2],[0,3]],"W","Du"],[14,"Stab",[[0,0],[0,1],[0,2],[0,3]],"K","Wa"],[15,"Stab",[[0,0],[0,1],[0,2],[0,3]],"S","Wa"],[16,"Quadrat",[[0,0],[1,0],[0,1],[1,1]],"P","Wi"],[17,"Quadrat",[[0,0],[1,0],[0,1],[1,1]],"W","Du"],[18,"Quadrat",[[0,0],[1,0],[0,1],[1,1]],"K","Wa"],[19,"Quadrat",[[0,0],[1,0],[0,1],[1,1]],"S","Du"],[20,"Quadrat",[[0,0],[1,0],[0,1],[1,1]],"P","Wi"],[21,"T-Form",[[0,0],[1,0],[2,0],[1,1]],"W","Wi"],[22,"T-Form",[[0,0],[1,0],[2,0],[1,1]],"K","Du"],[23,"T-Form",[[0,0],[1,0],[2,0],[1,1]],"S","Wi"],[24,"T-Form",[[0,0],[1,0],[2,0],[1,1]],"P","Wa"],[25,"T-Form",[[0,0],[1,0],[2,0],[1,1]],"W","Wi"],[26,"L-Form",[[0,0],[0,1],[0,2],[1,2]],"K","Du"],[27,"L-Form",[[0,0],[0,1],[0,2],[1,2]],"S","Du"],[28,"L-Form",[[0,0],[0,1],[0,2],[1,2]],"P","Wa"],[29,"L-Form",[[0,0],[0,1],[0,2],[1,2]],"W","Wi"],[30,"L-Form",[[0,0],[0,1],[0,2],[1,2]],"K","Wa"],[31,"S-Form",[[1,0],[2,0],[0,1],[1,1]],"S","Wi"],[32,"S-Form",[[1,0],[2,0],[0,1],[1,1]],"P","Wa"],[33,"S-Form",[[1,0],[2,0],[0,1],[1,1]],"W","Wi"],[34,"S-Form",[[1,0],[2,0],[0,1],[1,1]],"K","Du"],[35,"S-Form",[[1,0],[2,0],[0,1],[1,1]],"S","Du"],[36,"P-Form",[[0,0],[1,0],[0,1],[1,1],[0,2]],"P","Wa"],[37,"P-Form",[[0,0],[1,0],[0,1],[1,1],[0,2]],"W","Wa"],[38,"P-Form",[[0,0],[1,0],[0,1],[1,1],[0,2]],"K","Wa"],[39,"U-Form",[[0,0],[2,0],[0,1],[1,1],[2,1]],"S","Du"],[40,"U-Form",[[0,0],[2,0],[0,1],[1,1],[2,1]],"P","Wi"],[41,"U-Form",[[0,0],[2,0],[0,1],[1,1],[2,1]],"W","Wi"],[42,"Kreuz",[[1,0],[0,1],[1,1],[2,1],[1,2]],"K","Du"],[43,"Kreuz",[[1,0],[0,1],[1,1],[2,1],[1,2]],"S","Wa"],[44,"Kreuz",[[1,0],[0,1],[1,1],[2,1],[1,2]],"P","Du"],[45,"Langes L",[[0,0],[0,1],[0,2],[0,3],[1,3]],"W","Wa"],[46,"Langes L",[[0,0],[0,1],[0,2],[0,3],[1,3]],"K","Wa"],[47,"Langes L",[[0,0],[0,1],[0,2],[0,3],[1,3]],"S","Wi"],[48,"Z-Form",[[0,0],[1,0],[1,1],[1,2],[2,2]],"P","Du"],[49,"Z-Form",[[0,0],[1,0],[1,1],[1,2],[2,2]],"W","Wa"],[50,"Z-Form",[[0,0],[1,0],[1,1],[1,2],[2,2]],"K","Du"],[51,"Winkel",[[0,0],[0,1],[1,1]],"S","Wi"],[52,"Halm",[[0,0],[0,1],[0,2]],"P","Wi"],[53,"Treppe",[[0,0],[0,1],[1,1],[1,2],[2,2]],"W","Du"],[54,"Quadrat",[[0,0],[1,0],[0,1],[1,1]],"K","Wi"],[55,"L-Form",[[0,0],[0,1],[0,2],[1,2]],"S","Wa"],[56,"T-Form",[[0,0],[1,0],[2,0],[1,1]],"P","Du"],[57,"Stab",[[0,0],[0,1],[0,2],[0,3]],"K","Wa"],[58,"S-Form",[[1,0],[2,0],[0,1],[1,1]],"W","Wa"],[59,"Treppe",[[0,0],[0,1],[1,1],[1,2],[2,2]],"S","Du"],[60,"Winkel",[[0,0],[0,1],[1,1]],"P","Wi"]];
+const FRUIT={W:{n:"Weizen",c:"var(--W)"},K:{n:"Kürbis",c:"var(--K)"},S:{n:"Sternenbeere",c:"var(--S)"},P:{n:"Nebelpilz",c:"var(--P)"}};
+const RES={Wa:"Wasser",Du:"Dünger",Wi:"Wind"};
+const ISLBACK_SVG='<svg viewBox="0 0 30 24"><path d="M4 9h22l-3 5H7z" fill="#9fd36c" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/><path d="M7 14h16l-5 7-3-3-3 4z" fill="#c98b5a" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>';
+const CROW=`<svg viewBox="0 0 24 24"><path d="M3 14c3-1 5-4 9-4 2 0 3-2 5-2l3 1-3 1c0 3-2 6-6 7l-2 3-1-3c-2 0-4-1-5-3z" fill="#1b1830" stroke="#f6e7a6" stroke-width=".8" stroke-linejoin="round"/><circle cx="16.3" cy="8.9" r=".9" fill="#f6e7a6"/></svg>`;
+const ISLANDS=[
+ {id:0,name:"Stille Lichtung",g:4,rows:[".###.","#####","#####",".###.","....."],rule:"Keine Sonderregel. Ein ruhiger Ort für den Anfang deiner Reise."},
+ {id:1,name:"Glutfels",g:4,rows:[".###.","#####","####.",".####","..#.."],rule:"Kürbis-Gruppen geben +3 extra. Bei Ankunft verdunstet dein gesamtes Wasser.",bonus:"K",dry:1},
+ {id:2,name:"Nebelkrone",g:3,rows:["##...","##R#.",".####",".#R#.","...##"],rule:"Nebelpilz-Gruppen zählen hier schon ab 3 Feldern.",pmin:3},
+ {id:3,name:"Sturmspitze",g:3,rows:["#####","#####","..##.","..#..","..#.."],rule:"Der Wind bringt je Böe 4 Karten. Wind kann hier nicht als Joker genutzt werden.",draw:4,noWind:1},
+ {id:4,name:"Weizenwiege",g:5,rows:["#####","#####","####.","###..","##..."],rule:"Weizen-Gruppen geben +3 extra.",bonus:"W"},
+ {id:5,name:"Sternenhain",g:4,rows:[".##..","####.","#####",".####","..##."],rule:"Sternenbeeren-Gruppen geben +3 extra.",bonus:"S"},
+ {id:6,name:"Moosbuckel",g:5,rows:["#####","#~###","#####","###..","###.."],rule:"In der Mitte liegt ein Teich. Leere Felder kosten hier keine Punkte.",noEmpty:1},
+ {id:7,name:"Tropfenklippe",g:4,rows:["..##.",".####","#####","####.",".#..."],rule:"Bei Ankunft erhältst du 2 Wasser.",wet:1},
+ {id:8,name:"Wurzelbrücke",g:3,rows:["###..","###..","..#..","..###","..###"],rule:"Verbindet eine Fruchtgruppe über die Brücke beide Hälften, gibt sie +5.",bridge:1},
+ {id:9,name:"Krähennest",g:4,rows:[".#.#.","#####","#####",".###.","..#.."],rule:"Jede volle Zeile oder Spalte gibt hier +1.",crows:1},
+ {id:10,name:"Mondschatten",g:4,rows:[".####","###..","##...","###..",".####"],rule:"Ist die Insel am Ende komplett bepflanzt, bekommst du 8 Punkte extra.",shadow:1},
+ {id:11,name:"Flügelmühle",g:4,rows:["..##.","#.##.","#####",".##.#",".##.."],rule:"Abgeworfene Karten mit Wind-Symbol bringen 2 Wind.",mill:1},
+];
+const EVENTS=[
+ {k:"crow",title:"Krähenschwarm",cells:[[0,0],[1,0]],x:"Ein Schwarm Krähen stürzt sich auf deine Felder und stiehlt die Saat. Du bestimmst, wo er landet – die Felder darunter werden wieder leer."},
+ {k:"crow",title:"Krähenschwarm",cells:[[0,0],[0,1],[1,1]],x:"Ein Schwarm Krähen stürzt sich auf deine Felder und stiehlt die Saat. Du bestimmst, wo er landet – die Felder darunter werden wieder leer."},
+
+ {k:"storm",title:"Gewitter",x:"Regen prasselt herab: Du erhältst 2 Wasser. Doch ein Blitz schlägt in ein freies Feld ein und lässt es zu Fels erstarren."},
+ {k:"calm",title:"Windstille",x:"Kein Lüftchen regt sich. Für diese Karte kommt kein Ersatz – du hast in dieser Böe eine Karte weniger."},
+ {k:"star",title:"Sternschnuppe",x:"Ein Funkeln zieht über den Himmel. Du erhältst 1 Wasser und 1 Dünger. Wünsch dir was."},
+ {k:"sniff",title:"Moon schnüffelt",x:"Aus dem Abgrund steigt ein tiefes Grollen. Zwei riesige Augen öffnen sich. Moons Hunger steigt dauerhaft um 4."},
+ {k:"sniff",title:"Moon schnüffelt",x:"Aus dem Abgrund steigt ein tiefes Grollen. Zwei riesige Augen öffnen sich. Moons Hunger steigt dauerhaft um 4."},
+ 
+ {k:"slide",title:"Erdrutsch",x:"Am Rand deiner Insel bröckelt die Erde. Ein freies Randfeld bricht ab und stürzt in den Abgrund."},
+];
+
+const CRAVINGS=[
+ {id:'gW',s:'Weizen-Gruppe (4+)',t:'Eine Weizen-Gruppe (mindestens 4 Felder)',ok:a=>a.maxG.W>=4},
+ {id:'gK',s:'Kürbis-Gruppe (4+)',t:'Eine Kürbis-Gruppe (mindestens 4 Felder)',ok:a=>a.maxG.K>=4},
+ {id:'gS',s:'Beeren-Gruppe (4+)',t:'Eine Sternenbeeren-Gruppe (mindestens 4 Felder)',ok:a=>a.maxG.S>=4},
+ {id:'gP',s:'Pilz-Gruppe (4+)',t:'Eine Nebelpilz-Gruppe (mindestens 4 Felder)',ok:a=>a.maxG.P>=4},
+ {id:'l3',s:'3 volle Linien',t:'Mindestens 3 volle Zeilen oder Spalten',ok:a=>a.full>=3},
+ {id:'e2',s:'max. 2 leere Felder',t:'Höchstens 2 leere Felder am Ende',ok:a=>a.empty<=2,end:1},
+ {id:'f4',s:'alle 4 Früchte',t:'Alle vier Früchte auf der Insel',ok:a=>a.kinds>=4},
+];
+const CRAVE_FAIL=5,SNIFF=4,ROPES=3,ROPE_PER=15,FRUIT_SHORT=3,CYCLE_STEP=10;
+const MOONS=[
+ {id:'gier',name:'Moon, der Nimmersatte',pts:175,need:{},t:'Er will einfach nur viel. Hauptsache, es ist genug.'},
+ {id:'kuerbis',name:'Moon, der Kürbisgierige',pts:135,need:{K:25},t:'Ohne Kürbisse wird er grantig.'},
+ {id:'brot',name:'Moon, der Brotfreund',pts:135,need:{W:25},t:'Er träumt von Weizenfeldern.'},
+ {id:'beere',name:'Moon, der Beerennascher',pts:130,need:{S:25,W:5},t:'Süße Sternenbeeren, ganz viele, und ein bisschen Korn dazu.'},
+ {id:'pilz',name:'Moon, der Pilzsucher',pts:130,need:{P:25,K:5},t:'Er liebt Nebelpilze, ganz viele, mit einer Beilage Kürbis.'},
+ {id:'fein',name:'Moon, der Feinschmecker',pts:120,need:{W:15,K:15,S:15,P:15},t:'Er will von allem reichlich.'},
+];
+const WEATHER=[
+ {id:'brise',name:'Sanfte Brise',t:'Ein ruhiger Wind. Keine Besonderheit.'},
+ {id:'west',name:'Westwind',fav:'K',t:'Hast du in einer Böe einen Samen, der kein Kürbis ist, schiebst du einen davon unter den Stapel und ziehst neu.'},
+ {id:'sued',name:'Südwind',fav:'W',t:'Hast du in einer Böe einen Samen, der kein Weizen ist, schiebst du einen davon unter den Stapel und ziehst neu.'},
+ {id:'ost',name:'Ostwind',fav:'S',t:'Hast du in einer Böe einen Samen, der keine Sternenbeere ist, schiebst du einen davon unter den Stapel und ziehst neu.'},
+ {id:'nebel',name:'Nebelwind',fav:'P',t:'Hast du in einer Böe einen Samen, der kein Nebelpilz ist, schiebst du einen davon unter den Stapel und ziehst neu.'},
+ {id:'flaute',name:'Flaute',draw:2,wind:2,t:'Nur 2 Samen pro Böe. Dafür bekommst du sofort 2 Wind.'},
+ {id:'sturm',name:'Sturm',draw:4,gm:-1,t:'4 Samen pro Böe – aber eine Böe weniger.'},
+ {id:'pollen',name:'Pollenflug',pollen:1,t:'Fruchtgruppen zählen schon ab 3 Feldern.'},
+ {id:'regen',name:'Regenfront',rain:1,t:'Jede Böe bringt dir 1 Wasser.'},
+ {id:'abend',name:'Abendrot',dusk:1,t:'Jede volle Zeile oder Spalte gibt +1.'},
+];
+/* =================== ICONS =================== */
+const O='stroke="#24203a" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"';
+const ICON={
+ W:`<svg viewBox="0 0 24 24"><path d="M12 22V6" ${O} fill="none"/><g fill="#fff3c4" ${O}><ellipse cx="9" cy="8" rx="2.2" ry="3.3" transform="rotate(-25 9 8)"/><ellipse cx="15" cy="8" rx="2.2" ry="3.3" transform="rotate(25 15 8)"/><ellipse cx="9" cy="13.5" rx="2.2" ry="3.3" transform="rotate(-25 9 13.5)"/><ellipse cx="15" cy="13.5" rx="2.2" ry="3.3" transform="rotate(25 15 13.5)"/><ellipse cx="12" cy="4" rx="2" ry="3"/></g></svg>`,
+ K:`<svg viewBox="0 0 24 24"><path d="M12 7c0-2 1-3.5 3-4" ${O} fill="none" stroke="#2f6d2f"/><g fill="#ffd2a8" ${O}><ellipse cx="7.5" cy="14" rx="4.5" ry="6.5"/><ellipse cx="16.5" cy="14" rx="4.5" ry="6.5"/><ellipse cx="12" cy="14" rx="4.5" ry="7"/></g></svg>`,
+ S:`<svg viewBox="0 0 24 24"><g fill="#e6dcff" ${O}><circle cx="8.5" cy="14" r="5"/><circle cx="15.5" cy="14" r="5"/><circle cx="12" cy="8.5" r="5"/></g><path d="M12 6.2l.9 1.8 2 .3-1.45 1.4.35 2-1.8-.95-1.8.95.35-2L9.1 8.3l2-.3z" fill="#f6e7a6" ${O} stroke-width="1"/></svg>`,
+ P:`<svg viewBox="0 0 24 24"><path d="M9.5 13h5l1 8h-7z" fill="#fff" ${O}/><path d="M3 13.5C3 7.5 7 4 12 4s9 3.5 9 9.5z" fill="#dfeaf5" ${O}/><g fill="#24203a"><circle cx="8" cy="9.5" r="1.2"/><circle cx="13.5" cy="7.5" r="1.1"/><circle cx="16" cy="11" r="1.2"/></g></svg>`,
+ Wa:`<svg viewBox="0 0 24 24"><path d="M12 2.5C9 7 5.5 10.5 5.5 14.5a6.5 6.5 0 0013 0C18.5 10.5 15 7 12 2.5z" fill="#5aa7e8" ${O}/><path d="M9 14.5a3 3 0 002.5 3" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round"/></svg>`,
+ Du:`<svg viewBox="0 0 24 24"><path d="M4 20C4 10 10 4 20 4c0 10-6 16-16 16z" fill="#7dbb4b" ${O}/><path d="M5 19L15 9" ${O} fill="none"/></svg>`,
+ Wi:`<svg viewBox="0 0 24 24" fill="none" ${O} stroke-width="2.2"><path d="M3 8h11a3 3 0 10-3-3"/><path d="M3 13h16a3 3 0 11-3 3"/><path d="M3 18h7"/></svg>`,
+};
+const gustSvg=`<svg viewBox="0 0 30 18" class="gust" fill="none" stroke="#2f6db5" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg>`;
+const EVART={
+ crow:`<svg viewBox="0 0 110 80"><g fill="#24203a"><path d="M15 40q10-12 20 0q10-12 20 0q-10-5-20 4q-10-9-20-4z"/><path d="M50 22q8-9 16 0q8-9 16 0q-8-4-16 3q-8-7-16-3z"/><path d="M62 55q9-10 18 0q9-10 18 0q-9-4-18 4q-9-8-18-4z"/></g></svg>`,
+ storm:`<svg viewBox="0 0 110 80"><path d="M25 38a14 14 0 0127-6 12 12 0 0124 3 10 10 0 01-2 20H32a10 10 0 01-7-17z" fill="#fff" ${O} stroke-width="2.5"/><path d="M56 50l-9 16h8l-6 12 16-19h-9l6-9z" fill="#f6e7a6" ${O} stroke-width="2.2"/></svg>`,
+ tail:`<svg viewBox="0 0 110 80" fill="none" stroke="#5b4a8b" stroke-width="5" stroke-linecap="round"><path d="M10 25h55a10 10 0 10-10-10"/><path d="M10 42h75a10 10 0 11-10 10"/><path d="M10 59h40"/></svg>`,
+ calm:`<svg viewBox="0 0 110 80"><text x="55" y="52" text-anchor="middle" font-family="Fredoka" font-weight="700" font-size="34" fill="#5b4a8b">z z z</text></svg>`,
+ star:`<svg viewBox="0 0 110 80"><path d="M10 70L68 25" stroke="#f6e7a6" stroke-width="6" stroke-linecap="round"/><path d="M78 8l5 10 11 1.6-8 7.8 1.9 11-9.9-5.2-9.9 5.2 1.9-11-8-7.8 11-1.6z" fill="#f6e7a6" ${O} stroke-width="2.2"/></svg>`,
+ sniff:`<svg viewBox="0 0 110 80"><rect width="110" height="80" rx="12" fill="#1b2340"/><g stroke="#24203a" stroke-width="2.5"><circle cx="35" cy="42" r="17" fill="#fff4c9"/><circle cx="75" cy="42" r="17" fill="#fff4c9"/></g><circle cx="35" cy="43" r="11" fill="#1b2340"/><circle cx="75" cy="43" r="11" fill="#1b2340"/><circle cx="39" cy="38" r="4.5" fill="#f6e7a6"/><circle cx="79" cy="38" r="4.5" fill="#f6e7a6"/></svg>`,
+ slide:`<svg viewBox="0 0 110 80"><path d="M10 20h60v14H10z" fill="#9fd36c" ${O} stroke-width="2.5"/><path d="M10 34h60l-10 18-22 6-28-10z" fill="#c98b5a" ${O} stroke-width="2.5"/><path d="M78 40l10 4-4 10-10-3z M86 60l7 3-3 7-7-2z" fill="#c98b5a" ${O} stroke-width="2"/></svg>`,
+};
+const SHIP=`
+<defs><pattern id="hp" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="8" height="8" fill="#fff"/></pattern></defs>
+<g stroke="#24203a" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+ <path d="M60 196q35-24 70 0q35-24 70 0q35-24 70 0" fill="none" stroke="#fff" stroke-width="10" opacity=".7"/>
+ <ellipse cx="160" cy="70" rx="112" ry="56" fill="#cdbdf0"/>
+ <path d="M160 14c-40 18-40 94 0 112" fill="#a9c9ef"/>
+ <path d="M160 14c40 18 40 94 0 112" fill="#f6c6a8"/>
+ <path d="M64 50q-12 20 0 40" fill="none" stroke-width="3"/>
+ <rect x="208" y="40" width="26" height="22" rx="3" fill="#f6e7a6" transform="rotate(12 221 51)"/>
+ <path d="M213 44l16 14M229 44l-16 14" stroke-width="2" transform="rotate(12 221 51)"/>
+ <rect x="88" y="78" width="24" height="18" rx="3" fill="#9fd36c" transform="rotate(-10 100 87)"/>
+ <path d="M100 124l-12 34M220 124l12 34M135 126l-4 32M185 126l4 32" fill="none" stroke-width="3"/>
+ <path d="M62 158h196l-18 34H80z" fill="#c98b5a"/>
+ <path d="M70 172h180" fill="none" stroke-width="2.5"/>
+ <rect x="92" y="146" width="40" height="12" rx="3" fill="#9fd36c"/>
+ <rect x="140" y="146" width="40" height="12" rx="3" fill="#9fd36c"/>
+ <circle cx="104" cy="144" r="6" fill="#f08a3c"/><circle cx="120" cy="143" r="5" fill="#f08a3c"/>
+ <circle cx="152" cy="143" r="4.5" fill="#9b7fd1"/><circle cx="165" cy="142" r="4.5" fill="#9b7fd1"/>
+ <path d="M206 158v-26" fill="none"/>
+ <circle cx="206" cy="122" r="8" fill="#ffe2c4"/>
+ <path d="M192 116q14-12 28 0z" fill="#f4c542"/><path d="M190 117h32" stroke-width="3"/>
+ <path d="M206 131q16 0 24 8" fill="none" stroke="#f08a3c" stroke-width="5"/>
+</g>`;
+
+/* =================== HELPERS =================== */
+const $=s=>document.querySelector(s);
+const el=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const norm=cells=>{const mx=Math.min(...cells.map(c=>c[0])),my=Math.min(...cells.map(c=>c[1]));return cells.map(([x,y])=>[x-mx,y-my])};
+const rot=cells=>norm(cells.map(([x,y])=>[-y,x]));
+const mir=cells=>norm(cells.map(([x,y])=>[-x,y]));
+const store={get(k){try{return localStorage.getItem(k)}catch(e){return null}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function show(id){document.querySelectorAll('.screen').forEach(s=>{s.classList.toggle('on',s.id===id);if(s.id===id)s.scrollTop=0});lastScreen=id;syncMoon(id)}
+function syncMoon(id){const on=!!((id==='play'||id==='score')&&G&&G.moon);$('#moonDock').classList.toggle('on',!!(G&&G.moon));$('#eyes').classList.toggle('hide',on||id==='')}
+function moonMood(m){
+ const d=$('#moonDock'),E=$('#eyes');
+ if(m==='happy'){d.classList.add('happy');E.classList.add('happy');setTimeout(()=>{d.classList.remove('happy');E.classList.remove('happy')},1800)}
+ if(m==='angry'){d.classList.remove('jolt');void d.offsetWidth;d.classList.add('jolt');setTimeout(()=>d.classList.remove('jolt'),800);jolt()}
+}
+let lastScreen='menu';
+function toast(html){const t=el('div','toast',html);document.body.appendChild(t);setTimeout(()=>t.remove(),1700)}
+function eyes(mode){const e=$('#eyes');const h=e.classList.contains('hide');e.className='eyes '+mode+(h?' hide':'')}
+function lick(){const d=$('#moonDock');if(d.classList.contains('on')){d.classList.remove('lick');void d.offsetWidth;d.classList.add('lick');setTimeout(()=>d.classList.remove('lick'),2100);return}const e=$('#eyes');if(e.classList.contains('hide'))return;e.classList.remove('lick');void e.offsetWidth;e.classList.add('lick');setTimeout(()=>e.classList.remove('lick'),2100)}
+(function lickLoop(){setTimeout(()=>{if(lastScreen==='play'||lastScreen==='menu'||lastScreen==='score')lick();lickLoop()},14000+Math.random()*16000)})();
+function resetEyes(){const e=$('#eyes');e.style.removeProperty('--b');e.style.removeProperty('--s');eyes('peek')}
+
+/* sky */
+(function(){const sky=$('#sky');for(let i=0;i<7;i++){const c=el('div','cloud');const w=60+Math.random()*120;
+ c.style.cssText=`width:${w}px;height:${w*.32}px;top:${5+Math.random()*60}%;left:0;animation:drift ${60+Math.random()*60}s linear ${-Math.random()*100}s infinite;opacity:${.5+Math.random()*.4}`;sky.appendChild(c)}})();
+$('#shipArt').innerHTML=SHIP;
+document.querySelectorAll('.chip[data-i]').forEach(c=>c.innerHTML=ICON[c.dataset.i]);
+
+/* =================== MODAL =================== */
+function modal({k,title,art,body,buttons,head}){
+ return new Promise(res=>{
+  const m=$('#modal');m.innerHTML='';
+  const c=el('div','mcard');
+  c.innerHTML=`<div class="mh" style="${head?'background:'+head:''}"><div class="k">${k||''}</div><h2>${title}</h2></div>${art?`<div class="art">${art}</div>`:''}<div class="mb">${body}</div>`;
+  const f=el('div','mf');
+  buttons.forEach(b=>{const x=el('button','btn '+(b.cls||''),b.label);x.disabled=!!b.disabled;x.onclick=()=>{m.classList.remove('on');res(b.v)};f.appendChild(x)});
+  c.appendChild(f);m.appendChild(c);m.classList.add('on');
+ });
+}
+
+/* =================== GAME STATE =================== */
+let G=null;
+const pick=(arr,not)=>{const o=arr.filter(x=>x!==not);return o[Math.random()*o.length|0]};
+function chooseLength(){
+ return modal({k:'Neue Reise',title:'Wie weit fliegst du?',head:'var(--blue)',art:`<svg viewBox="0 0 320 230" width="170">${SHIP}</svg>`,
+  body:'Alle 4 Inseln wird es Vollmond – dann kommt Moon zum Festmahl. Deine 3 Ankerseile müssen die ganze Reise halten.',
+  buttons:[{label:'Kurze Reise · 4 Inseln',cls:'primary',v:4},{label:'Lange Reise · 8 Inseln',v:8},{label:'Große Reise · 12 Inseln',v:12}]});
+}
+async function newGame(){
+ const len=await chooseLength();
+ const deck=shuffle([...SEEDS.map(s=>({t:'seed',no:s[0],name:s[1],cells:s[2],fruit:s[3],res:s[4]})),...EVENTS.map((e,i)=>({...e,t:'event',no:'E'+i}))]);
+ G={len,cycles:len/4,cycle:-1,deck,discard:[],islandDeck:shuffle(ISLANDS.slice(1).map(i=>i.id)),visited:[],n:0,isl:null,board:null,stars:new Set(),
+    res:{Wa:0,Du:0,Wi:0},crav:null,weather:null,moon:null,fruits:{W:0,K:0,S:0,P:0},ropes:ROPES,played:0,hunger:0,total:0,grand:0,surplus:0,
+    log:[],hand:[],gust:0,gusts:0,sel:-1,orient:null,ghost:null,phase:'idle',
+    lastPlaced:[],busy:false,turnDone:null,pickRes:null,pickFilter:null,starMode:false,swapMode:false};
+ resetEyes();
+ journey();
+}
+async function journey(){
+ let alive=true;
+ for(G.n=0;G.n<G.len;G.n++){
+  if(G.n%4===0)await newCycle();
+  enterTravel();await sleep(400);
+  await newWeather();
+  const isl=G.n===0?ISLANDS[0]:await chooseIsland();
+  await arrive(isl);
+  for(G.gust=0;G.gust<G.gusts;G.gust++)await gustTurn();
+  await scoreIsland();
+  if(G.n%4===3){alive=await feast(G.n===G.len-1);if(!alive)break}
+ }
+}
+function moonNeedHtml(m,have){
+ const e=Object.entries(m.need);if(!e.length)return'';
+ return e.map(([f,n])=>{const h=have?have[f]:null;return`<span class="fr ${h!=null&&h>=n?'ok':''}">${ICON[f]}${h!=null?h+'/':''}${n}</span>`}).join('');
+}
+function enterTravel(){
+ G.board=null;G.isl=null;G.hand=[];G.sel=-1;G.ghost=null;G.phase='travel';G.busy=true;
+ $('#pK').textContent=`Insel ${G.n+1} von ${G.len}`;$('#pName').textContent='Die Blunberrey segelt…';
+ show('play');renderAll();
+}
+async function newCycle(){
+ G.cycle++;G.moon=pick(MOONS,G.moon);G.hunger=G.moon.pts+CYCLE_STEP*G.cycle;G.total=0;G.fruits={W:0,K:0,S:0,P:0};G.log=[];G.played=0;
+ await moonAwakens();
+
+}
+function reqChips(){
+ return `<span class="reqChip pts">☾ ${G.hunger} Punkte</span>`+Object.entries(G.moon.need).map(([f,n])=>`<span class="reqChip">${ICON[f]} ${n}</span>`).join('');
+}
+/* Moon wacht auf: müdes Blinzeln, Augen öffnen, neugieriger Blick von links oben nach rechts oben */
+async function wakeEyes(c){
+ const lids=[...c.querySelectorAll('.ce .lid')],pups=[...c.querySelectorAll('.ce .pup')];
+ const Y=v=>({transform:`translateY(${v}%)`});
+ const S='cubic-bezier(.45,0,.55,1)',OUT='cubic-bezier(.2,.7,.3,1)',IN='cubic-bezier(.6,0,.9,.4)';
+ // Lidfolge: [Ziel in %, Dauer ms, Easing]
+ const seq=[[0,500,S],[-20,1100,S],[-20,350,S],[0,420,IN],[0,650,S],[-46,1150,OUT],[-46,500,S],[0,150,IN],[0,90,S],[-106,620,OUT]];
+ const tot=seq.reduce((a,x)=>a+x[1],0);let t=0;const kf=[{...Y(0),offset:0}];
+ seq.forEach(([v,d,e],i)=>{kf[kf.length-1].easing=e;t+=d;kf.push({...Y(v),offset:Math.min(1,t/tot)})});
+ const anims=lids.map((l,i)=>l.animate(kf,{duration:tot,delay:i*70,fill:'forwards'}));
+ setTimeout(()=>Snd.impact(false),tot-700);
+ await anims[anims.length-1].finished.catch(()=>{});
+ await sleep(250);
+}
+const LOOK=(deg,rr=30)=>{const a=deg*Math.PI/180;return{transform:`translate(${(Math.sin(a)*rr).toFixed(1)}%,${(-Math.cos(a)*rr).toFixed(1)}%)`}};
+function pupTo(c,frames,dur){return Promise.all([...c.querySelectorAll('.ce .pup')].map(p=>p.animate(frames,{duration:dur,fill:'forwards',composite:'replace'}).finished.catch(()=>{})))}
+function lidBlink(c){const S='cubic-bezier(.45,0,.55,1)';return Promise.all([...c.querySelectorAll('.ce .lid')].map((l,i)=>l.animate([{transform:'translateY(-106%)'},{transform:'translateY(0)',offset:.5},{transform:'translateY(-106%)'}],{duration:280,delay:i*50,easing:S}).finished.catch(()=>{})))}
+async function moonAwakens(){
+ const c=$('#cine'),E=$('#eyes'),R=$('#cReqs');
+ E.classList.add('hide');R.innerHTML='';c.className='';c.querySelectorAll('.lid,.pup').forEach(e=>e.getAnimations().forEach(x=>x.cancel()));void c.offsetWidth;
+ c.className='on';Snd.spike(.95,12);await sleep(1200);show('');
+ c.classList.add('s1');await sleep(2200);
+ c.classList.add('s2');await wakeEyes(c);
+ c.classList.add('s3');
+ const chips=[`<span class="reqChip pts">☾ ${G.hunger} Punkte</span>`,...Object.entries(G.moon.need).map(([f,n])=>`<span class="reqChip">${ICON[f]} ${n} ${FRUIT[f].n}</span>`)];
+ const S='cubic-bezier(.45,0,.55,1)',STEP=Math.max(950,2700/chips.length);
+ // neugierig nach links oben schauen – dort tauchen gleich die Wünsche auf
+ await pupTo(c,[{transform:'translate(0,0)',easing:S},LOOK(-30)],700);await sleep(250);
+ // langsam nach rechts oben wandern, während die Wünsche nacheinander erscheinen
+ const sweep=chips.length*STEP+300;
+ pupTo(c,[{...LOOK(-30),easing:'cubic-bezier(.4,0,.6,1)'},LOOK(-10),LOOK(10),LOOK(30)],sweep);
+ for(const ch of chips){R.insertAdjacentHTML('beforeend',ch);Snd.chime();await sleep(STEP)}
+ await sleep(650);
+ // zurück nach vorn, einmal blinzeln, dann Überblendung
+ await pupTo(c,[{...LOOK(30),easing:S},{transform:'translate(0,0)'}],650);
+ await sleep(200);await lidBlink(c);await sleep(500);
+ const wrap=el('div','moonWrap',`<div class="moonCard"><div class="k">MONDZYKLUS ${G.cycle+1} VON ${G.cycles} · FESTMAHL NACH INSEL ${G.cycle*4+4}</div><div class="cReqs">${reqChips()}</div><div class="mEyes"><div class="eye"><i class="pup"></i><b class="lid"></b></div><div class="eye"><i class="pup"></i><b class="lid"></b></div></div><h2>${G.moon.name}</h2><p>${G.moon.t}${Object.keys(G.moon.need).length?' Jede fehlende Frucht zählt 3 Punkte.':''}</p></div>`);
+ document.body.appendChild(wrap);
+ c.className='';await sleep(1000);
+ await new Promise(res=>{const b=el('button','btn gold','Auf in die Saison');b.onclick=res;wrap.appendChild(b)});
+ moonCardIntro();enterTravel();renderDock();
+ const D=$('#moonDock');D.style.visibility='hidden';const mc=wrap.querySelector('.moonCard');
+ wrap.querySelector('.btn').remove();
+ const from=rectOf(mc),to=rectOf(D);
+ await mc.animate([{transform:'none'},{transform:`translate(${to.left-from.left+(to.width-from.width)/2}px,${to.top-from.top+(to.height-from.height)/2}px) scale(${to.width/from.width})`}],{duration:1100,easing:'cubic-bezier(.5,0,.3,1)',fill:'forwards'}).finished.catch(()=>{});
+ D.style.visibility='';wrap.remove();
+ resetEyes();setTimeout(lick,1800);
+}
+function weatherFace(w){return`<div class="wh"><div class="k">WETTER</div><h3>${w.name}</h3></div><div class="wa">${w.fav?ICON[w.fav]:EVART.tail.replace('stroke="#5b4a8b"','stroke="#2f6db5"')}</div><div class="wt">${w.t}</div>`}
+async function newWeather(){
+ if(!G.wDeck||!G.wDeck.length)G.wDeck=shuffle([...WEATHER]);
+ const w=G.wDeck.pop();
+ const sc=el('div','wxScene',`<div style="position:absolute;left:0;right:0;top:10vh;text-align:center;font-family:Fredoka,Nunito,sans-serif;font-weight:700;font-size:26px;color:#fff;text-shadow:0 2px 0 #24203a">Der Wind dreht…</div>`);
+ document.body.appendChild(sc);renderDeck();
+ const dr=rectOf($('#wdeck'));
+ const card=el('div','wcard',`<div class="wback">${BACK()}</div>`);card.style.cssText='position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);z-index:71';
+ sc.appendChild(card);const cr=rectOf(card);
+ const dx=dr.left+dr.width/2-(cr.left+cr.width/2),dy=dr.top+dr.height/2-(cr.top+cr.height/2),s=dr.width/cr.width;
+ await sleep(250);
+ await card.animate([{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(${s})`},{transform:'translate(-50%,-50%)'}],{duration:650,easing:'cubic-bezier(.2,.9,.3,1.1)',fill:'forwards'}).finished;
+ await card.animate([{transform:'translate(-50%,-50%) rotateY(0deg)'},{transform:'translate(-50%,-50%) rotateY(90deg)'}],{duration:220,easing:'ease-in',fill:'forwards'}).finished;
+ card.innerHTML=weatherFace(w);Snd.chime();
+ await card.animate([{transform:'translate(-50%,-50%) rotateY(-90deg)'},{transform:'translate(-50%,-50%) rotateY(0deg)'}],{duration:260,easing:'ease-out',fill:'forwards'}).finished;
+ await new Promise(res=>{const b=el('button','btn primary','Weiter');b.style.cssText='position:fixed;left:50%;bottom:12vh;transform:translateX(-50%);z-index:72;min-width:180px';b.onclick=()=>{b.remove();res()};sc.appendChild(b)});
+ sc.style.background='transparent';sc.style.backdropFilter='none';
+ await card.animate([{transform:'translate(-50%,-50%)'},{transform:`translate(-50%,-50%) translate(${dx}px,${dy}px) scale(${s})`}],{duration:500,easing:'cubic-bezier(.4,.1,.3,1)',fill:'forwards'}).finished;
+ G.weather=w;sc.remove();renderDeck();
+}
+
+/* ---------- island choice ---------- */
+function islandCardHtml(isl){
+ const cnt=isl.rows.join('').split('#').length-1;
+ return `<div class="ih">${isl.name}<small>${Math.max(2,isl.g+(G.weather.gm||0))} Böen · ${cnt} Felder</small></div><div class="im">${isl.rows.join('').split('').map(ch=>`<i class="${ch==='#'?'l':ch==='R'?'r':ch==='~'?'p':''}"></i>`).join('')}</div><div class="it">${isl.rule}</div>`;
+}
+async function chooseIsland(){
+ if(G.islandDeck.length<3){G.islandDeck.push(...shuffle(G.visited.filter(id=>!G.islandDeck.includes(id))));G.visited=[]}
+ const opts=G.islandDeck.splice(0,3);renderDeck();
+ const sc=el('div','islScene',`<div class="head"><h2>Wohin weht der Wind?</h2><div>☾ Festmahl nach Insel ${G.cycle*4+4}: ${G.hunger} · ✦ Vorrat ${G.total}</div></div>`);
+ document.body.appendChild(sc);
+ const dr=rectOf($('#ideck'));
+ const W=Math.min(innerWidth*.30,innerHeight*.30,230),H=W*112/63,gap=Math.min(12,innerWidth*.025),total=3*W+2*gap,x0=(innerWidth-total)/2,y=Math.max(innerHeight*.5-H/2,innerHeight*.22);
+ const cards=opts.map((id,i)=>{const c=el('div','icv',`<div class="cback ib">${ISLBACK_SVG}</div>`);c.style.left=(x0+i*(W+gap))+'px';c.style.width=W+'px';c.style.top=y+'px';sc.appendChild(c);return c});
+ await Promise.all(cards.map((c,i)=>{const r=rectOf(c);return c.animate([{transform:`translate(${dr.left-r.left}px,${dr.top-r.top}px) scale(${dr.width/r.width})`},{transform:'none'}],{duration:600,delay:i*160,easing:'cubic-bezier(.2,.9,.3,1.1)',fill:'backwards'}).finished}));
+ for(let i=0;i<3;i++){const c=cards[i];await c.animate([{transform:'rotateY(0)'},{transform:'rotateY(90deg)'}],{duration:180,fill:'forwards'}).finished;c.innerHTML=islandCardHtml(ISLANDS[opts[i]]);Snd.chime();await c.animate([{transform:'rotateY(-90deg)'},{transform:'rotateY(0)'}],{duration:200,fill:'forwards'}).finished}
+ const idx=await new Promise(res=>cards.forEach((c,i)=>c.onclick=()=>res(i)));
+ const id=opts[idx];G.islandDeck.push(...opts.filter(o=>o!==id));G.visited.push(id);
+ const br=rectOf($('#board'));
+ await Promise.all(cards.map((c,i)=>{const r=rectOf(c);
+  if(i===idx)return c.animate([{transform:'none',opacity:1},{transform:`translate(${br.left+br.width/2-(r.left+r.width/2)}px,${br.top+br.height/2-(r.top+r.height/2)}px) scale(1.6)`,opacity:0}],{duration:600,easing:'ease-in',fill:'forwards'}).finished;
+  return c.animate([{transform:'none'},{transform:`translate(${dr.left-r.left}px,${dr.top-r.top}px) scale(${dr.width/r.width})`,opacity:.3}],{duration:500,easing:'ease-in',fill:'forwards'}).finished}));
+ sc.remove();renderDeck();
+ return ISLANDS[id];
+}
+
+/* ---------- arrive ---------- */
+async function arrive(isl){
+ G.isl=isl;G.stars=new Set();G.gusts=Math.max(2,isl.g+(G.weather.gm||0));
+ G.board=isl.rows.map(r=>r.split('').map(ch=>({type:ch==='#'?'land':ch==='R'?'rock':ch==='~'?'pond':'abyss',fruit:null})));
+ G.lastPlaced=[];G.fresh=true;G.phase='arrive';
+ $('#pK').textContent=`Insel ${G.n+1} von ${G.len}`;$('#pName').textContent=isl.name;
+ show('play');renderAll();Snd.spike(.95,7);Snd.swell();
+ setHint(isl.rule);
+ await sleep(900);
+ if(isl.dry&&G.res.Wa>0){G.res.Wa=0;renderRes();toast('Glutfels: Dein Wasser ist verdunstet')}
+ if(isl.wet)gain('Wa',2);
+ if(G.weather.wind)gain('Wi',G.weather.wind);
+ await sleep(600);
+ eyes('peek');updateEyes();
+}
+
+/* ---------- gust ---------- */
+async function gustTurn(){
+ G.hand=[];G.sel=-1;G.ghost=null;G.orient=null;G.lastPlaced=[];G.phase='draw';G.busy=true;G.blown=false;G.blowMode=false;G.undo=null;
+ G.played++;updateEyes();Snd.base(.3+Math.min(1,G.played/16)*.5);
+ renderAll();
+ if(G.weather.rain)gain('Wa',1);
+ await drawCards(G.weather.draw||G.isl.draw||3);
+ G.busy=false;G.phase='pick';
+ const f=G.weather.fav;
+ if(f&&G.hand.some(c=>c.t==='seed'&&c.fruit!==f)){G.blowMode=true;renderAll();await new Promise(r=>G.blowDone=r)}
+ renderAll();
+ await new Promise(r=>G.turnDone=r);
+}
+const BACK=()=>`<svg viewBox="0 0 30 18" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round"><path d="M2 5h17a3.5 3.5 0 10-3.5-3.5"/><path d="M2 11h22a3.5 3.5 0 11-3.5 3.5"/></svg>`;
+function renderDeck(){
+ $('#deckN').textContent=G.deck.length;$('#iN').textContent=G.islandDeck.length;$('#wN').textContent=G.wDeck?G.wDeck.length:WEATHER.length;
+ const f=$('#wface');if(G.weather){f.classList.add('on');f.innerHTML=`${G.weather.fav?ICON[G.weather.fav]:EVART.tail.replace('stroke="#5b4a8b"','stroke="#fff"')}<span>${G.weather.name}</span>`;f.onclick=()=>toast(`${G.weather.name}: ${G.weather.t}`)}else f.classList.remove('on');
+}
+function rectOf(e){return e.getBoundingClientRect()}
+function flyClone(fromEl,toRect,{dur=480,fade=true,scale,rot=0}={}){
+ const r=rectOf(fromEl),f=fromEl.cloneNode(true);f.classList.add('flyer');f.classList.remove('sel','swap');
+ Object.assign(f.style,{left:r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px',transform:'none',animation:'none'});
+ document.body.appendChild(f);
+ const s=scale??Math.min(toRect.width/r.width,toRect.height/r.height);
+ const dx=toRect.left+toRect.width/2-(r.left+r.width/2),dy=toRect.top+toRect.height/2-(r.top+r.height/2);
+ const a=f.animate([{transform:'none',opacity:1},{transform:`translate(${dx}px,${dy}px) scale(${s}) rotate(${rot}deg)`,opacity:fade?0:1}],{duration:dur,easing:'cubic-bezier(.4,.1,.3,1)',fill:'forwards'});
+ a.onfinish=()=>f.remove();return a.finished.catch(()=>{});
+}
+function flyFromDeck(cardEl){
+ const d=rectOf($('#deck')),c=rectOf(cardEl);
+ const back=el('div','cback',BACK());cardEl.appendChild(back);
+ cardEl.animate([{transform:`translate(${d.left-c.left+(d.width-c.width)/2}px,${d.top-c.top+(d.height-c.height)/2}px) scale(${d.width/c.width}) rotate(-10deg)`},{transform:'none'}],{duration:520,easing:'cubic-bezier(.2,.9,.25,1.15)'});
+ back.animate([{opacity:1},{opacity:1,offset:.45},{opacity:0}],{duration:520,fill:'forwards'}).onfinish=()=>back.remove();
+}
+async function flyEvent(){
+ const d=$('#deck');const r=rectOf(d);
+ const f=el('div','card flyer');f.style.cssText=`left:${r.left}px;top:${r.top}px;width:${r.width}px;height:${r.height}px;animation:none`;f.appendChild(el('div','cback ev',BACK()));document.body.appendChild(f);
+ const dx=innerWidth/2-(r.left+r.width/2),dy=innerHeight/2-(r.top+r.height/2);
+ await f.animate([{transform:'none'},{transform:`translate(${dx}px,${dy}px) scale(2.6) rotate(8deg)`,opacity:1,offset:.8},{transform:`translate(${dx}px,${dy}px) scale(2.8) rotateY(90deg)`,opacity:0}],{duration:650,easing:'ease-in-out',fill:'forwards'}).finished.catch(()=>{});
+ f.remove();
+}
+function popDeck(){
+ if(!G.deck.length){G.deck=shuffle(G.discard);G.discard=[];toast(`${ICON.Wi} Der Wind dreht – Stapel neu gemischt`);const d=$('#deck');d.classList.remove('shuffle');void d.offsetWidth;d.classList.add('shuffle')}
+ let c=G.deck.pop();
+ renderDeck();return c;
+}
+function presentEvent(ev,body,buttons){
+ return new Promise(async res=>{
+  const src=[...$('#hand').children].find(e=>e.dataset.no===ev.no);
+  const sc=el('div','evScene');document.body.appendChild(sc);
+  const big=el('div','evBig',`<div class="eh"><div class="k">EREIGNIS</div><h3>${ev.title}</h3></div><div class="ea">${EVART[ev.k]}</div><div class="et">${body}</div>`);
+  sc.appendChild(big);const br=rectOf(big);
+  if(src){const r=rectOf(src);src.style.visibility='hidden';
+   await big.animate([{transform:`translate(${r.left-br.left}px,${r.top-br.top-(br.height-r.height)/2}px) scale(${r.width/br.width})`,opacity:.6},{transform:'translateY(-50%)',opacity:1}],{duration:550,easing:'cubic-bezier(.2,.9,.3,1.1)'}).finished.catch(()=>{});
+  }
+  const box=el('div','evBtns');sc.appendChild(box);
+  const v=await new Promise(r=>buttons.forEach(o=>{const b=el('button','btn small '+(o.cls||'primary'),o.label);b.disabled=!!o.disabled;b.onclick=()=>r(o.v);box.appendChild(b)}));
+  box.remove();
+  const k=G.hand.indexOf(ev);if(k>=0){G.hand.splice(k,1);renderHand()}
+  await big.animate([{transform:'translateY(-50%)',opacity:1},{transform:'translateY(-50%) scale(.6)',opacity:0}],{duration:300,easing:'ease-in',fill:'forwards'}).finished.catch(()=>{});
+  sc.remove();res(v);
+ });
+}
+async function resolveEvent(ev){
+ const prevBusy=G.busy;G.busy=true;renderAll();
+ const B=G.board;let repl=1;
+ const planted=[],free=[];B.forEach((row,r)=>row.forEach((c,k)=>{if(c.type==='land'&&c.fruit)planted.push([r,k]);if(c.type==='land'&&!c.fruit)free.push([r,k])}));
+ const card=(body,buttons)=>presentEvent(ev,body,buttons);
+ if(ev.k==='crow'){
+  const prev=`<div style="display:inline-grid;grid-template-columns:repeat(${bbox(ev.cells)[0]},22px);gap:0;margin-top:10px">${(()=>{const[w,h]=bbox(ev.cells),s=new Set(ev.cells.map(p=>p+''));let g='';for(let y=0;y<h;y++)for(let x=0;x<w;x++)g+=s.has([x,y]+'')?`<i style="width:22px;height:22px;background:#3b3557;border:2px solid #24203a;margin:-1px;display:flex">${CROW}</i>`:'<i style="width:22px;height:22px"></i>';return g})()}</div>`;
+  if(!orients(ev.cells).some(o=>firstFitCrow(o))){await card(ev.x+'<div style="text-align:center">'+prev+'</div><i>Doch auf deiner Insel ist noch nichts zu holen – die Krähen ziehen weiter.</i>',[{label:'Puh!',cls:'primary',v:1}])}
+  else{
+   const v=await card(ev.x+'<div style="text-align:center">'+prev+'</div>',[{label:`${ICON.Wi} Wegpusten (2 Wind)`,cls:'gold',v:'scare',disabled:G.res.Wi<2},{label:'Landen lassen',cls:'primary',v:'ok'}]);
+   if(v==='scare'){G.res.Wi-=2;renderRes();toast('Die Krähen flattern davon!')}
+   else await placeCrow(ev.cells);
+  }
+ }else if(ev.k==='storm'){
+  await card(ev.x,[{label:'Unterstellen',cls:'primary',v:1}]);gain('Wa',2);
+  if(free.length){const [r,k]=await pickCell(([r,k])=>B[r][k].type==='land'&&!B[r][k].fruit,'Wo schlägt der Blitz ein? Wähle ein freies Feld.');B[r][k].type='rock';renderBoard()}
+ }else if(ev.k==='tail'){
+  await card(ev.x,[{label:'Segel setzen',cls:'primary',v:1}]);repl=2;
+ }else if(ev.k==='calm'){
+  await card(ev.x,[{label:'Abwarten',cls:'primary',v:1}]);repl=0;
+ }else if(ev.k==='star'){
+  await card(ev.x,[{label:'✦ Wünschen',cls:'primary',v:1}]);gain('Wa',1);gain('Du',1);
+ }else if(ev.k==='sniff'){
+  moonMood('angry');Snd.spike(1,8);Snd.impact(true);
+  await card(ev.x,[{label:'Schnell weiter…',cls:'primary',v:1}]);G.hunger+=SNIFF;renderDock();lick();moonMood('angry');
+ }else if(ev.k==='slide'){
+  const edge=free.filter(([r,k])=>[[1,0],[-1,0],[0,1],[0,-1]].some(([dr,dk])=>{const a=r+dr,b=k+dk;return a<0||b<0||a>4||b>4||B[a][b].type==='abyss'}));
+  if(!edge.length){await card(ev.x+'<br><br><i>Aber kein freies Randfeld gibt nach.</i>',[{label:'Glück gehabt',cls:'primary',v:1}])}
+  else{await card(ev.x,[{label:'Oh nein',cls:'primary',v:1}]);const ok=new Set(edge.map(e=>e+''));
+   const [r,k]=await pickCell(p=>ok.has(p+''),'Welches Randfeld bricht ab?');B[r][k].type='abyss';renderBoard()}
+ }
+ G.busy=prevBusy;renderAll();
+ if(repl===2){return 'extra2'}
+ return repl;
+}
+async function drawCards(n){
+ let pending=n;
+ while(pending>0){
+  const evs=[];
+  for(let i=0;i<pending;i++){const c=popDeck();G.hand.push(c);renderHand(true);await sleep(380);if(c.t==='event')evs.push(c)}
+  pending=0;
+  if(evs.length){
+   await sleep(750);
+   for(const ev of evs){const r=await resolveEvent(ev);const k=G.hand.indexOf(ev);if(k>=0){G.hand.splice(k,1);renderHand()}G.discard.push(ev);if(r==='extra2')pending+=2;else if(r)pending+=1}
+  }
+ }
+}
+
+function pickCell(filter,prompt){
+ return new Promise(res=>{G.pickFilter=filter;G.pickRes=p=>{G.pickFilter=null;G.pickRes=null;setHint('');res(p)};G.busy=false;G.phase0=G.phase;G.phase='target';setHint(prompt);renderAll()}).then(p=>{G.phase=G.phase0;G.busy=true;return p});
+}
+function gain(k,n){
+ let m=n;if(k==='Wi'&&G.isl&&G.isl.mill)m=n*2;
+ const before=G.res[k];G.res[k]=Math.min(10,G.res[k]+m);
+ const got=G.res[k]-before;
+ if(got>0){Snd.chime();toast(`+${got} ${ICON[k]} ${RES[k]}`);const e=$('#r'+k);e.classList.remove('bump');void e.offsetWidth;e.classList.add('bump')}
+ renderRes();if(G.board)renderJokers();
+}
+
+/* ---------- placement ---------- */
+function fits(cells,r0,c0){
+ return cells.every(([x,y])=>{const r=r0+y,c=c0+x;return r>=0&&c>=0&&r<5&&c<5&&G.board[r][c].type==='land'&&!G.board[r][c].fruit});
+}
+function orients(cells){const o=[];let c=norm(cells);for(let m=0;m<2;m++){for(let i=0;i<4;i++){o.push(c);c=rot(c)}c=mir(c)}return o}
+function anyFit(card){return orients(card.cells).some(o=>{for(let r=-4;r<5;r++)for(let c=-4;c<5;c++)if(fits(o,r,c))return true;return false})}
+function firstFit(cells){for(let r=-4;r<5;r++)for(let c=-4;c<5;c++)if(fits(cells,r,c))return[r,c];return null}
+function bbox(cells){return[Math.max(...cells.map(c=>c[0]))+1,Math.max(...cells.map(c=>c[1]))+1]}
+function selectCard(i){
+ if(G.busy)return;
+ if(G.hand[i]&&G.hand[i].t==='event')return;
+ if(G.swapMode){doSwap(i);return}
+ if(G.blowMode){doBlow(i);return}
+ if(G.phase!=='pick'&&G.phase!=='place')return;
+ if(G.sel===i){G.sel=-1;G.phase='pick';G.ghost=null;renderAll();return}
+ G.sel=i;G.orient=norm(G.hand[i].cells);G.phase='place';
+ let pos=firstFit(G.orient);
+ if(!pos){for(const o of orients(G.hand[i].cells)){const p=firstFit(o);if(p){G.orient=o;pos=p;break}}}
+ G.ghost=pos||[1,1];renderAll();
+}
+function moveGhost(r,c){const[w,h]=bbox(G.orient);G.ghost=[r-((h-1)>>1),c-((w-1)>>1)];renderBoard();renderActions()}
+function transform(f){if(!G.orient)return;const[w,h]=bbox(G.orient);const cr=G.ghost[0]+((h-1)>>1),cc=G.ghost[1]+((w-1)>>1);G.orient=f(G.orient);moveGhost(cr,cc)}
+function snapUndo(phase){G.undo={phase,board:G.board.map(r=>r.map(c=>({...c}))),hand:[...G.hand],discard:[...G.discard],res:{...G.res},sel:G.sel,orient:G.orient,ghost:G.ghost&&[...G.ghost],lastPlaced:[...G.lastPlaced],lastFruit:G.lastFruit,stars:new Set(G.stars)}}
+function doUndo(){
+ const u=G.undo;if(!u||G.busy||G.flying>0||G.phase!=='after')return;
+ G.board=u.board;G.hand=u.hand;G.discard=u.discard;G.res=u.res;G.sel=u.sel;G.orient=u.orient;G.ghost=u.ghost;G.lastPlaced=u.lastPlaced;G.lastFruit=u.lastFruit;G.stars=u.stars;
+ G.undo=null;G.starMode=false;G.phase=u.phase;Snd.chime&&Snd.chime();toast('↶ Zurückgenommen');renderAll();
+}
+function flyGain(e,k,delay){G.flying=(G.flying||0)+1;setTimeout(()=>flyClone(e,rectOf($('#r'+k)),{dur:520,rot:15}).then(()=>{gain(k,1);G.flying--;renderActions()}),delay)}
+function plant(){
+ if(G.phase!=='place'||!fits(G.orient,...G.ghost))return;
+ snapUndo('place');
+ const card=G.hand[G.sel];G.lastPlaced=[];
+ G.orient.forEach(([x,y])=>{const r=G.ghost[0]+y,c=G.ghost[1]+x;G.board[r][c].fruit=card.fruit;G.lastPlaced.push([r,c])});
+ G.lastFruit=card.fruit;Snd.plop();G.pop=new Set(G.lastPlaced.map(p=>p+''));
+ const others=G.hand.filter((_,i)=>i!==G.sel);
+ const els=[...$('#hand').querySelectorAll('.card')];const br=rectOf($('#board'));
+ const ghostCells=G.lastPlaced.map(([r,c])=>({r,c}));const gr=ghostCells.reduce((a,{r,c})=>a+r,0)/ghostCells.length,gc=ghostCells.reduce((a,{r,c})=>a+c,0)/ghostCells.length;
+ const cs=br.width/5;flyClone(els[G.sel],{left:br.left+gc*cs,top:br.top+gr*cs,width:cs,height:cs},{dur:420});
+ const sel=G.sel;let k=0;els.forEach((e,i)=>{if(i===sel)return;flyGain(e,G.hand[i].res,k++*120)});
+ G.discard.push(card,...others);
+ G.hand=[];G.sel=-1;G.ghost=null;G.phase='after';
+ renderAll();
+}
+function discardAll(){
+ if(G.busy||G.blowMode)return;
+ snapUndo('pick');
+ const h=G.hand;const els=[...$('#hand').querySelectorAll('.card')];
+ els.forEach((e,i)=>flyGain(e,h[i].res,i*120));
+ G.discard.push(...h);G.hand=[];G.sel=-1;G.ghost=null;G.phase='after';renderAll();
+}
+async function doBlow(i){
+ const c=G.hand[i],f=G.weather.fav;
+ if(c.fruit===f){toast(`${ICON[f]} Den willst du behalten!`);return}
+ G.blowMode=false;G.blown=true;G.busy=true;const se=$('#hand').querySelectorAll('.card')[i];
+ flyClone(se,rectOf($('#deck')),{dur:480,rot:-12});G.hand.splice(i,1);G.deck.unshift(c);G.sel=-1;G.ghost=null;G.phase='pick';
+ renderAll();await sleep(300);await drawCards(1);G.busy=false;const d=G.blowDone;G.blowDone=null;if(d)d();
+}
+async function doSwap(i){
+ G.swapMode=false;const se=$('#hand').querySelectorAll('.card')[i];flyClone(se,{left:innerWidth/2-20,top:-120,width:40,height:56},{dur:500,rot:40});const c=G.hand.splice(i,1)[0];G.discard.push(c);G.res.Wi--;G.sel=-1;G.ghost=null;G.phase='pick';
+ G.busy=true;renderAll();await drawCards(1);G.busy=false;renderAll();
+}
+function fitsCrow(cells,r0,c0){
+ return cells.every(([x,y])=>{const r=r0+y,c=c0+x;return r>=0&&c>=0&&r<5&&c<5&&G.board[r][c].type==='land'&&G.board[r][c].fruit});
+}
+function firstFitCrow(cells){for(let r=-4;r<5;r++)for(let c=-4;c<5;c++)if(fitsCrow(cells,r,c))return[r,c];return null}
+function fitsNow(){return G.phase==='crow'?fitsCrow(G.orient,...G.ghost):fits(G.orient,...G.ghost)}
+function placeCrow(cells){
+ return new Promise(res=>{
+  G.crowPrev=G.phase;G.crowRes=res;G.orient=norm(cells);let pos=firstFitCrow(G.orient);
+  if(!pos){for(const o of orients(cells)){const p=firstFitCrow(o);if(p){G.orient=o;pos=p;break}}}
+  G.ghost=pos;G.phase='crow';G.busy=false;renderAll();
+ });
+}
+async function landCrow(){
+ if(G.phase!=='crow'||!fitsNow())return;
+ const hit=G.orient.map(([x,y])=>[G.ghost[0]+y,G.ghost[1]+x]);
+ G.stolen=new Set(hit.map(p=>p+''));G.ghost=null;G.busy=true;renderBoard();Snd.impact(false);
+ await sleep(750);
+ hit.forEach(([r,c])=>G.board[r][c].fruit=null);G.stolen=null;toast('Die Krähen stehlen deine Saat!');
+ const res=G.crowRes;G.crowRes=null;G.orient=null;G.phase=G.crowPrev;renderAll();res();
+}
+function waterTargets(){
+ const s=new Set();G.lastPlaced.forEach(([r,c])=>[[1,0],[-1,0],[0,1],[0,-1]].forEach(([a,b])=>{const R=r+a,C=c+b;if(R>=0&&C>=0&&R<5&&C<5&&G.board[R][C].type==='land'&&!G.board[R][C].fruit)s.add(R+','+C)}));return s;
+}
+async function useWater(){
+ const t=waterTargets();if(G.res.Wa<2||!t.size)return;
+ G.res.Wa-=2;renderRes();G.busy=true;
+ const [r,c]=await pickCell(p=>t.has(p+''),'Wähle ein angrenzendes Feld – die Form wächst.');
+ G.board[r][c].fruit=G.lastFruit;G.lastPlaced.push([r,c]);G.pop=new Set([r+','+c]);G.busy=false;renderAll();
+}
+/* lines */
+function lines(){
+ const L=[];const B=G.board;
+ for(let i=0;i<5;i++){
+  for(const kind of['r','c']){
+   const cells=[];for(let j=0;j<5;j++){const [r,c]=kind==='r'?[i,j]:[j,i];const t=B[r][c].type;if(t==='land'||t==='rock')cells.push([r,c])}
+   if(cells.length<2)continue;
+   const planted=cells.filter(([r,c])=>B[r][c].fruit).length;
+   const full=cells.every(([r,c])=>B[r][c].type==='rock'||B[r][c].fruit)&&planted>0;
+   L.push({id:kind+i,kind,i,cells,planted,full});
+  }
+ }
+ return L;
+}
+function starTargets(){return lines().filter(l=>l.full&&!G.stars.has(l.id))}
+
+/* =================== RENDER =================== */
+function renderAll(){renderDeck();renderTop();renderRes();renderDock();renderBoard();renderActions();renderHand();renderJokers()}
+function renderTop(){
+ $('#vorrat').textContent=G.total;
+ if(G.board){const lv=score().total;const l=$('#live');l.textContent=(lv>=0?'+':'−')+Math.abs(lv);l.style.color=lv>=0?'var(--blue)':'#c43d3d';$('#livePill').classList.toggle('fed',G.total+lv>=G.hunger)}
+ $('#ropesTop').innerHTML=ropesHtml();
+ if(!G.isl){$('#gusts').innerHTML='';$('#live').textContent='';return}
+ const g=$('#gusts');g.innerHTML=`<span>Böe ${Math.min(G.gust+1,G.gusts)} von ${G.gusts}</span>`;for(let i=0;i<G.gusts;i++){g.insertAdjacentHTML('beforeend',gustSvg);const s=g.lastChild;if(i<G.gust)s.classList.add('done');if(i===G.gust)s.classList.add('now')}
+}
+function renderRes(){renderJokers()}
+function bumpPill(){moonMood('angry')}
+const POND_SVG=`<svg class="pondArt" viewBox="0 0 100 100" aria-label="Teich">
+ <path class="wv1" d="M10 26q8-6 16 0t16 0" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".8"/>
+ <path class="wv2" d="M58 82q8-6 16 0t16 0" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" opacity=".7"/>
+ <path d="M78 22c-3 6-1 13 3 16M84 18c0 6 2 10 5 12" fill="none" stroke="#4d7f2c" stroke-width="3" stroke-linecap="round"/>
+ <g class="pad"><path d="M50 40a26 20 0 1 0 22 9L52 58z" fill="#7dbb4b" stroke="#24203a" stroke-width="3" stroke-linejoin="round"/>
+ <path d="M30 60q10-6 20-2M38 70q8-4 14-10" fill="none" stroke="#4d7f2c" stroke-width="2.2" stroke-linecap="round"/></g>
+ <g class="frog"><ellipse cx="44" cy="52" rx="13" ry="10" fill="#9bd85f" stroke="#24203a" stroke-width="3"/>
+ <circle cx="37" cy="42" r="6" fill="#9bd85f" stroke="#24203a" stroke-width="3"/><circle cx="51" cy="42" r="6" fill="#9bd85f" stroke="#24203a" stroke-width="3"/>
+ <circle cx="37" cy="42" r="2.4" fill="#24203a"/><circle cx="51" cy="42" r="2.4" fill="#24203a"/>
+ <path d="M39 55q5 4 10 0" fill="none" stroke="#24203a" stroke-width="2.4" stroke-linecap="round"/>
+ <circle cx="35" cy="53" r="2" fill="#f2a7a7" opacity=".8"/><circle cx="53" cy="53" r="2" fill="#f2a7a7" opacity=".8"/></g></svg>`;
+const ANCHOR=`<svg viewBox="0 0 24 24" fill="none" stroke="#24203a" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="2.5" fill="#f6e7a6"/><path d="M12 7.5V21M7 11h10M4 15a8 8 0 0016 0"/><path d="M4 15l-1.5 2M20 15l1.5 2"/></svg>`;
+function ropesHtml(){let s='';for(let i=0;i<ROPES;i++)s+=ANCHOR.replace('<svg',`<svg class="${i<G.ropes?'':'gone'}"`);return s}
+function setHint(t){$('#hint').innerHTML=t}
+function renderBoard(){
+ const bd=$('#board');bd.innerHTML='';bd.parentElement.querySelectorAll('.lineMark').forEach(x=>x.remove());
+ if(!G.board){for(let i=0;i<25;i++)bd.appendChild(el('div','cell sea'));return}
+ const B=G.board,inGrp=groupCells();
+ const ghostSet=new Map();let ok=false;
+ if((G.phase==='place'||G.phase==='crow')&&G.ghost){ok=fitsNow();G.orient.forEach(([x,y])=>ghostSet.set((G.ghost[0]+y)+','+(G.ghost[1]+x),1))}
+ const fruit=G.sel>=0?G.hand[G.sel].fruit:null;
+ for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+  const d=B[r][c];const e=el('div','cell '+d.type);
+  if(d.type==='abyss'){if(G.fresh)e.style.animationDelay=((r*5+c)*35)+'ms';else e.style.animation='none'}
+  if(d.type==='land'){const below=r<4?B[r+1][c].type:'abyss';if(below==='abyss'){e.classList.add('edgeB');if((r*7+c*3+G.isl.id)%4===0)e.classList.add('fall')}}
+  if(d.type==='rock')e.appendChild(el('div','in'));
+  if(d.type==='pond')e.insertAdjacentHTML('beforeend',POND_SVG);
+  if(G.stolen&&G.stolen.has(r+','+c))e.appendChild(el('div','crowi',CROW));
+  if(d.fruit){const f=el('div','fruit'+(inGrp.has(r+','+c)?' grp':''),ICON[d.fruit]);f.style.background=FRUIT[d.fruit].c;if(!(G.pop&&G.pop.has(r+','+c)))f.style.animation='none';e.appendChild(f)}
+  if(ghostSet.has(r+','+c)){if(G.phase==='crow'){const g=el('div','ghost'+(ok?'':' bad'),CROW);g.style.background='#3b3557';e.appendChild(g)}else{const g=el('div','ghost'+(ok?'':' bad'),ICON[fruit]);g.style.background=FRUIT[fruit].c;e.appendChild(g)}}
+  if(G.phase==='target'&&G.pickFilter&&G.pickFilter([r,c])){e.classList.add('target');e.appendChild(el('div','tgt'))}
+  e.addEventListener('click',()=>cellClick(r,c));
+  bd.appendChild(e);
+ }
+ bd.style.touchAction=(G.phase==='place'||G.phase==='crow')?'none':'';
+ G.pop=null;if(G.fresh)setTimeout(()=>{if(G)G.fresh=false},50);
+ // line marks
+ const wrap=bd.parentElement;wrap.querySelectorAll('.lineMark').forEach(x=>x.remove());
+ const size=bd.clientWidth/5;
+ lines().forEach(l=>{
+  const m=el('div','lineMark');
+  const star=G.stars.has(l.id);
+  m.innerHTML=star?'★':l.full?'✓':'';
+  if(star)m.classList.add('star');else if(l.full)m.classList.add('full');
+  if(G.starMode&&l.full&&!star){m.classList.add('pick');m.innerHTML='★';m.onclick=()=>setStar(l.id)}
+  if(l.kind==='r'){m.style.cssText+=`;left:${22+bd.clientWidth+2}px;top:${l.i*size}px;width:20px;height:${size}px`}
+  else{m.style.cssText+=`;top:${bd.clientHeight+2}px;left:${22+l.i*size}px;height:22px;width:${size}px`}
+  if(m.innerHTML)wrap.appendChild(m);
+ });
+}
+function cellClick(r,c){
+ if(G.phase==='target'&&G.pickFilter&&G.pickFilter([r,c])){G.pickRes([r,c]);return}
+ if(G.busy)return;
+ if(G.phase==='place'||G.phase==='crow'){
+  return; // Platzieren läuft über die Zeiger-Steuerung des Felds (boardPointer)
+ }
+}
+/* Platzieren per Finger/Maus: tippen = Form dorthin, auf die Form tippen = pflanzen, ziehen = Form verschieben */
+(function boardPointer(){
+ const bd=document.getElementById('board');let down=null;
+ const placing=()=>G&&G.board&&(G.phase==='place'||G.phase==='crow')&&!G.busy&&G.orient;
+ const cellAt=(x,y)=>{const b=bd.getBoundingClientRect();return[Math.floor((y-b.top)/b.height*5),Math.floor((x-b.left)/b.width*5)]};
+ const inside=p=>p[0]>=0&&p[0]<5&&p[1]>=0&&p[1]<5;
+ // zählt als „auf der Form“: jedes Feld innerhalb ihres Umrisses (auch die Lücke im U)
+ const onGhost=p=>{if(!G.ghost)return false;const[w,h]=bbox(G.orient);return p[0]>=G.ghost[0]&&p[0]<G.ghost[0]+h&&p[1]>=G.ghost[1]&&p[1]<G.ghost[1]+w};
+ const setGhost=(r,c)=>{const ys=G.orient.map(o=>o[1]),xs=G.orient.map(o=>o[0]);
+  r=Math.max(-Math.min(...ys),Math.min(4-Math.max(...ys),r));c=Math.max(-Math.min(...xs),Math.min(4-Math.max(...xs),c));
+  if(G.ghost&&G.ghost[0]===r&&G.ghost[1]===c)return;G.ghost=[r,c];renderBoard();renderActions()};
+ const center=p=>{const[w,h]=bbox(G.orient);setGhost(p[0]-((h-1)>>1),p[1]-((w-1)>>1))};
+ bd.addEventListener('pointerdown',ev=>{if(!placing()||ev.button>0)return;const p=cellAt(ev.clientX,ev.clientY);if(!inside(p))return;
+  down={p,x:ev.clientX,y:ev.clientY,grip:onGhost(p),g:G.ghost?[...G.ghost]:null,moved:false,mouse:ev.pointerType==='mouse'};
+  try{bd.setPointerCapture(ev.pointerId)}catch(e){}});
+ bd.addEventListener('pointermove',ev=>{if(!placing())return;const p=cellAt(ev.clientX,ev.clientY);
+  if(!down){if(ev.pointerType==='mouse'&&inside(p))center(p);return}
+  if(!down.moved&&Math.hypot(ev.clientX-down.x,ev.clientY-down.y)<10)return;
+  down.moved=true;
+  if(down.grip&&down.g)setGhost(down.g[0]+p[0]-down.p[0],down.g[1]+p[1]-down.p[1]);else if(inside(p))center(p)});
+ bd.addEventListener('pointerup',ev=>{const d=down;down=null;if(!d||!placing()||d.moved)return;
+  if(d.grip&&fitsNow()){G.phase==='crow'?landCrow():plant();return}
+  if(!d.mouse||!d.grip)center(d.p)});
+ bd.addEventListener('pointercancel',()=>{down=null});
+ // Desktop: Mausrad dreht, Rechtsklick spiegelt – ohne die Maus vom Feld zu nehmen
+ let wheelT=0;
+ bd.addEventListener('wheel',ev=>{if(!placing())return;ev.preventDefault();const now=Date.now();if(now-wheelT<180)return;wheelT=now;transform(ev.deltaY<0?rot:r=>rot(rot(rot(r))))},{passive:false});
+ bd.addEventListener('contextmenu',ev=>{if(!placing())return;ev.preventDefault();transform(mir)});
+})();
+function setStar(id){G.stars.add(id);G.res.Du-=2;G.starMode=false;toast('★ Diese Linie zählt doppelt');renderAll()}
+function renderActions(){
+ const a=$('#actions');a.innerHTML='';
+ const mk=(label,fn,cls,dis)=>{const b=el('button','btn small '+(cls||''),label);b.disabled=!!dis;b.onclick=fn;a.appendChild(b);return b};
+ if(G.phase==='place'){
+  const ok=fits(G.orient,...G.ghost);
+  mk('⟳ Drehen',()=>transform(rot));mk('⇋ Spiegeln',()=>transform(mir));
+  mk('✓ Pflanzen',plant,'primary',!ok);
+  const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  setHint(fine?(ok?'Klick pflanzt · Mausrad dreht · Rechtsklick spiegelt':'Passt so nicht. Mausrad dreht · Rechtsklick spiegelt'):(ok?'Tippe auf die Form, um sie zu pflanzen – oder zieh sie woanders hin.':'So passt die Form nicht. Verschieben, drehen oder spiegeln.'));
+ }else if(G.phase==='crow'){
+  const ok=fitsNow();
+  mk('⟳ Drehen',()=>transform(rot));mk('⇋ Spiegeln',()=>transform(mir));
+  mk('Krähen landen lassen',landCrow,'primary',!ok);
+  setHint(ok?'Wo sollen die Krähen landen? Am besten dort, wo es am wenigsten wehtut.':'Krähen landen nur auf bepflanzten Feldern.');
+ }else if(G.phase==='pick'&&!G.busy){
+  const fitAny=G.hand.some(anyFit);
+  if(G.blowMode)setHint(`${G.weather.name}: Ein Samen, der ${G.weather.fav==='S'?'keine':'kein'} ${FRUIT[G.weather.fav].n} ist, muss zurück unter den Stapel. Welcher?`);
+  else if(G.swapMode)setHint('Welche Karte soll der Wind davontragen?');
+  else setHint(fitAny?'Wähle die Früchte.':'Keine Form passt auf deine Insel.');
+  if(!fitAny&&!G.blowMode)mk('Alle abwerfen',discardAll,'primary');
+ }else if(G.phase==='after'){
+  setHint(G.starMode?'Tippe auf einen goldenen Stern neben einer vollen Linie.':'Gut gepflanzt! Joker nutzen oder weiter.');
+  if(G.undo)mk('↶ Rückgängig',doUndo,'',G.busy||G.flying>0);
+  mk(G.gust+1<G.isl.g?'Nächste Böe ›':'Insel abernten ›',()=>{if(G.busy)return;G.undo=null;G.starMode=false;G.phase='idle';G.turnDone()},'primary',G.busy);
+ }else if(G.phase==='draw'){setHint('Der Wind bringt neue Früchte…')}
+ else if(G.phase==='travel'){setHint('Die Blunberrey segelt durch die Wolken…')}
+}
+function cardHtml(c){
+ if(c.t==='event')return `<div class="top" style="background:var(--event)"><span>Ereignis</span></div><div class="nm" style="color:var(--event)">${c.title}</div><div class="shape">${EVART[c.k]}</div><div class="bot" style="background:#efe9f7">!</div>`;
+ const [w,h]=bbox(c.cells);const set=new Set(c.cells.map(p=>p+''));let g='';
+ for(let y=0;y<h;y++)for(let x=0;x<w;x++)g+=set.has([x,y]+'')?`<i style="background:${FRUIT[c.fruit].c}"></i>`:'<i style="border-color:transparent"></i>';
+ return `<div class="top" style="background:${FRUIT[c.fruit].c}"><span>Nr. ${c.no}</span><span class="badge">${ICON[c.fruit]}</span></div>
+ <div class="nm">${c.name}<br><span class="fn">${FRUIT[c.fruit].n}</span></div>
+ <div class="shape"><div class="g" style="grid-template-columns:repeat(${w},auto)">${g}</div></div>
+ <div class="bot">${ICON[c.res]}+1 ${RES[c.res]}</div>`;
+}
+function renderHand(newLast){
+ const h=$('#hand');const old={};h.querySelectorAll('.card').forEach(e=>old[e.dataset.no]=rectOf(e));
+ h.innerHTML='';h.classList.toggle('many',G.hand.length>3);
+ G.hand.forEach((c,i)=>{const d=el('div','card'+(i===G.sel?' sel':'')+(G.swapMode?' swap':''),cardHtml(c));d.dataset.no=c.no;
+  if(G.swapMode||(G.blowMode&&c.t==='seed'&&c.fruit!==G.weather.fav))d.style.animation='wobble .5s infinite';
+  d.onclick=()=>selectCard(i);h.appendChild(d)});
+ h.querySelectorAll('.card').forEach((e,i)=>{
+  if(newLast&&i===G.hand.length-1){flyFromDeck(e);return}
+  const o=old[e.dataset.no];if(!o)return;const n=rectOf(e);const dx=o.left-n.left,dy=o.top-n.top;
+  if(Math.abs(dx)+Math.abs(dy)>1)e.animate([{transform:`translate(${dx}px,${dy}px)`},{transform:'none'}],{duration:300,easing:'ease-out'});
+ });
+}
+function renderJokers(){
+ const inPick=G.board&&(G.phase==='pick'||G.phase==='place')&&!G.busy&&!G.blowMode;
+ const J={
+  Wa:{l:'+1 Feld',c:2,fn:useWater,ok:G.board&&G.phase==='after'&&!G.busy&&G.res.Wa>=2&&waterTargets().size},
+  Du:{l:G.starMode?'Abbrechen':'Stern',c:2,on:G.starMode,fn:()=>{G.starMode=!G.starMode;renderAll()},ok:G.board&&(G.phase==='after'||G.phase==='pick')&&!G.busy&&(G.starMode||G.res.Du>=2&&starTargets().length)},
+  Wi:{l:G.swapMode?'Abbrechen':'Tauschen',c:1,on:G.swapMode,fn:()=>{G.swapMode=!G.swapMode;G.blowMode=false;G.sel=-1;G.ghost=null;G.phase='pick';renderAll()},ok:inPick&&(G.swapMode||G.res.Wi>=1&&G.isl&&!G.isl.noWind&&G.hand.length)}};
+ for(const k of['Wa','Du','Wi']){const b=$('#r'+k),o=J[k];
+  b.innerHTML=`<span class="rv">${ICON[k]}<span>${G.res[k]}</span></span><span class="rl">${o.l}${o.on?'':` <small>· ${o.c}</small>`}</span>`;
+  b.classList.toggle('off',!o.ok);b.classList.toggle('on',!!o.on);b.setAttribute('aria-disabled',o.ok?'false':'true');
+  b.onclick=()=>{if(J[k].ok&&!G.busy)J[k].fn()}}
+ $('#jokers').innerHTML='';
+}
+document.addEventListener('keydown',e=>{if(!G||lastScreen!=='play')return;if(e.key==='r')transform(rot);if(e.key==='m')transform(mir);if(e.key==='Enter'){G.phase==='crow'?landCrow():plant()}});
+window.addEventListener('resize',()=>{if(G&&lastScreen==='play')renderBoard()});
+
+function groupCells(){
+ const B=G.board,seen=new Set(),out=new Set();
+ for(let r=0;r<5;r++)for(let c=0;c<5;c++){const f=B[r][c].fruit;if(!f||seen.has(r+','+c))continue;
+  const grp=[],st=[[r,c]];seen.add(r+','+c);
+  while(st.length){const[a,b]=st.pop();grp.push(a+','+b);[[1,0],[-1,0],[0,1],[0,-1]].forEach(([x,y])=>{const R=a+x,C=b+y;if(R>=0&&C>=0&&R<5&&C<5&&B[R][C].fruit===f&&!seen.has(R+','+C)){seen.add(R+','+C);st.push([R,C])}})}
+  if(grp.length>=(((G.isl.pmin&&f==='P')||G.weather.pollen)?3:4))grp.forEach(x=>out.add(x))}
+ return out;
+}
+function analyze(){
+ const B=G.board,maxG={W:0,K:0,S:0,P:0},seen=new Set(),kinds=new Set();let empty=0;
+ for(let r=0;r<5;r++)for(let c=0;c<5;c++){const f=B[r][c].fruit;if(B[r][c].type==='land'&&!f)empty++;if(!f||seen.has(r+','+c))continue;kinds.add(f);
+  let n=0;const st=[[r,c]];seen.add(r+','+c);while(st.length){const[a,b]=st.pop();n++;[[1,0],[-1,0],[0,1],[0,-1]].forEach(([x,y])=>{const R=a+x,C=b+y;if(R>=0&&C>=0&&R<5&&C<5&&B[R][C].fruit===f&&!seen.has(R+','+C)){seen.add(R+','+C);st.push([R,C])}})}
+  maxG[f]=Math.max(maxG[f],n)}
+ return{maxG,empty,kinds:kinds.size,full:lines().filter(l=>l.full).length};
+}
+function islandFruits(){const o={W:0,K:0,S:0,P:0};G.board.forEach(r=>r.forEach(c=>{if(c.fruit)o[c.fruit]++}));return o}
+function moonCardIntro(){
+ const d=$('#moonDock');
+ $('#dK').textContent=`MONDZYKLUS ${G.cycle+1} VON ${G.cycles} · FESTMAHL NACH INSEL ${G.cycle*4+4}`;
+ $('#dName').textContent=G.moon.name;
+ $('#dText').textContent=G.moon.t+' Beim Festmahl kostet jede angefangene 15 fehlende Punkte ein Ankerseil'+(Object.keys(G.moon.need).length?' (jede fehlende Frucht zählt 3 Punkte).':'.');
+}
+function renderDock(){
+ if(!G||!G.moon)return;
+ const isf=G.board?islandFruits():{W:0,K:0,S:0,P:0},have={};for(const f in G.fruits)have[f]=G.fruits[f]+isf[f];
+ const pts=G.total+(G.board?Math.max(0,score().total):0);
+ const fs=Object.entries(G.moon.need).reduce((a,[f,n])=>a+Math.max(0,n-have[f]),0);const sh=Math.max(0,G.hunger-pts)+FRUIT_SHORT*fs;const risk=sh>0?Math.min(G.ropes,Math.ceil(sh/ROPE_PER)):0;
+ $('#dReqs').innerHTML=`<span class="reqChip pts ${pts>=G.hunger?'ok':''}">☾ ${pts}/${G.hunger}</span>`+Object.entries(G.moon.need).map(([f,n])=>`<span class="reqChip ${have[f]>=n?'ok':''}">${ICON[f]} ${have[f]}/${n}</span>`).join('')+`<span class="reqChip ${risk?'risk':'ok'}" title="So viele Ankerseile würde Moon jetzt durchbeißen">⚓ ${risk?'−'+risk+' Seil'+(risk>1?'e':''):'sicher'}</span>`;
+}
+function updateEyes(){
+ const e=$('#eyes');const p=Math.min(1,G.played/18);$('#moonDock').style.setProperty('--ds',(50+p*22)+'px');
+ e.style.setProperty('--b',(-6.5+p*3)+'vh');e.style.setProperty('--s',(8+p*2.5)+'vh');
+}
+function jolt(){const e=$('#eyes');e.classList.remove('jolt');void e.offsetWidth;e.classList.add('jolt');setTimeout(()=>e.classList.remove('jolt'),800)}
+/* =================== SCORING =================== */
+function score(){
+ const B=G.board,isl=G.isl;const out={lines:0,nLines:0,groups:0,nGroups:0,empty:0,special:0,specialTxt:[]};
+ lines().forEach(l=>{if(l.full){let p=l.planted*(G.stars.has(l.id)?2:1);if(isl.crows)p+=1;if(G.weather.dusk)p+=1;out.lines+=p;out.nLines++}});
+ const seen=new Set();
+ for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+  const f=B[r][c].fruit;if(!f||seen.has(r+','+c))continue;
+  const grp=[];const st=[[r,c]];seen.add(r+','+c);
+  while(st.length){const[a,b]=st.pop();grp.push([a,b]);[[1,0],[-1,0],[0,1],[0,-1]].forEach(([x,y])=>{const R=a+x,C=b+y;if(R>=0&&C>=0&&R<5&&C<5&&B[R][C].fruit===f&&!seen.has(R+','+C)){seen.add(R+','+C);st.push([R,C])}})}
+  const min=((isl.pmin&&f==='P')||G.weather.pollen)?3:4;
+  if(grp.length>=min){out.groups+=3;out.nGroups++;
+   if(isl.bonus===f){out.special+=3;out.specialTxt.push(`${FRUIT[f].n}-Gruppe +3`)}
+   if(isl.bridge&&grp.some(([a,b])=>a<=1&&b<=2)&&grp.some(([a,b])=>a>=3&&b>=2)){out.special+=5;out.specialTxt.push('Brücke verbunden +5')}
+  }
+ }
+ let empty=0;B.forEach(row=>row.forEach(c=>{if(c.type==='land'&&!c.fruit)empty++}));
+ out.emptyN=empty;out.empty=isl.noEmpty?0:-empty;
+ if(isl.shadow&&empty===0){out.special+=8;out.specialTxt.push('komplett bepflanzt +8')}
+
+ out.total=out.lines+out.groups+out.empty+out.special;
+ return out;
+}
+function scoreIsland(){
+ return new Promise(async res=>{
+  const s=score();
+  G.total+=s.total;const isf=islandFruits();for(const f in isf)G.fruits[f]+=isf[f];
+  const cok=G.total>=G.hunger*((G.n%4)+1)/4;
+  G.log.push({name:G.isl.name,pts:s.total});
+  $('#sK').textContent=`Insel ${G.n+1} von ${G.len} · abgeerntet`;$('#sName').textContent=G.isl.name;
+  const lb=[];if(G.isl.crows&&s.nLines)lb.push('Krähennest +'+s.nLines);if(G.weather.dusk&&s.nLines)lb.push('Abendrot +'+s.nLines);
+  const rows=[
+   [`Volle Zeilen & Spalten <small>(${s.nLines}${lb.length?', inkl. '+lb.join(', '):''})</small>`,s.lines],
+   [`Fruchtgruppen <small>(${s.nGroups})</small>`,s.groups],
+   [`Leere Felder <small>(${s.emptyN})</small>`,s.empty],
+   [`Sonderregel <small>${s.specialTxt.join(' · ')}</small>`,s.special],
+  ];
+  const t=$('#tally');t.innerHTML='';let k=0;const add=(cls,html)=>{const d=el('div','trow '+cls,html);d.style.animationDelay=(.25+k++*.35)+'s';t.appendChild(d)};
+  rows.forEach(r=>add('',`<span>${r[0]}</span><b class="${r[1]<0?'minus':''}">${r[1]>0?'+':''}${r[1]}</b>`));
+  add('sum',`<span>Ernte dieser Insel</span><b>${s.total}</b>`);
+  add('sum',`<span>Vorratskammer</span><b>${G.total}</b>`);
+  add('',`<span>Festmahl nach Insel ${G.cycle*4+4} <small>${moonNeedHtml(G.moon,G.fruits).replace(/class="fr/g,'style="display:inline-flex;gap:2px;margin-right:6px" class="fr')}</small></span><b>☾ ${G.hunger}</b>`);
+  setTimeout(()=>{renderDock();if(cok){moonMood('happy');toast('Moon schmatzt vorfreudig');Snd.calm(22)}else{moonMood('angry');toast('Moon leckt sich die Lippen …');Snd.spike(.8,5)}},(.25+4*.35)*1000);
+  renderLog('#log');
+  $('#bNext').textContent=G.n%4===3?'Vollmond – zum Festmahl ›':'Weiterreisen ›';
+  $('#bNext').onclick=()=>res();
+  show('score');
+ });
+}
+function renderLog(sel){
+ const l=$(sel);l.innerHTML='';
+ for(let i=0;i<4;i++){const e=G.log[i];l.appendChild(el('div','',e?`${e.name}<b>${e.pts}</b>`:`Insel ${G.cycle*4+i+1}<b>–</b>`))}
+}
+
+/* =================== FESTMAHL =================== */
+async function feast(last){
+ const m=G.moon,ptsShort=Math.max(0,G.hunger-G.total);
+ const needs=Object.entries(m.need).map(([f,n])=>({f,n,h:G.fruits[f]}));
+ const frShort=needs.reduce((a,x)=>a+Math.max(0,x.n-x.h),0);
+ const short=ptsShort+FRUIT_SHORT*frShort;const lose=short>0?Math.min(G.ropes,Math.ceil(short/ROPE_PER)):0;
+ setTimeout(()=>{$('#fRule').innerHTML=short>0?`Es fehlen ${ptsShort} Punkte${frShort?` + ${frShort} Früchte × ${FRUIT_SHORT}`:''} = ${short}.<br>Je angefangene ${ROPE_PER} fehlende Punkte beißt Moon ein Ankerseil durch → <b>${Math.ceil(short/ROPE_PER)} Seil${Math.ceil(short/ROPE_PER)>1?'e':''}</b>.`:'Nichts fehlt – alle Ankerseile halten.'},50);
+ G.grand+=G.total;if(!short)G.surplus+=G.total-G.hunger;
+ const E=$('#eyes');E.style.removeProperty('--b');E.style.removeProperty('--s');eyes('peek pounce');E.classList.remove('hide');Snd.impact(true);Snd.spike(1,8);
+ const app=$('#app');app.classList.remove('shake');void app.offsetWidth;app.classList.add('shake');await sleep(500);lick();await sleep(1500);
+ show('final');const ee=$('#eyes');ee.style.removeProperty('--b');ee.style.removeProperty('--s');eyes('rise big');
+ $('#fK').textContent=`Vollmond · Mondzyklus ${G.cycle+1} von ${G.cycles}`;$('#fTitle').textContent=m.name.replace('Moon, ','Festmahl: ');
+ $('#fTotal').textContent=G.total;$('#fHungerV').textContent=G.hunger;$('#fRopes').innerHTML=ropesHtml();
+ $('#fFruits').innerHTML=needs.map(x=>`<span class="${x.h>=x.n?'ok':'bad'}">${ICON[x.f]} ${x.h}/${x.n}</span>`).join('');
+ $('#verdict').textContent='';$('#fBtns').innerHTML='';renderLog('#flog');
+ const parts=[];if(ptsShort)parts.push(`${ptsShort} Punkte`);if(frShort)parts.push(`${frShort} Früchte`);
+ $('#vText').textContent=short>0?`Moon frisst deinen ganzen Vorrat – doch es fehlen ${parts.join(' und ')}. Er greift nach den Ankerseilen…`:'Moon frisst und frisst … und wird satt.';
+ for(let i=0;i<lose;i++){await sleep(1100);G.ropes--;$('#fRopes').innerHTML=ropesHtml();Snd.impact(true);toast('KNACK! Ein Ankerseil reißt')}
+ await sleep(800);
+ const dead=G.ropes<=0;
+ if(dead||last){finalVerdict(dead);return false}
+ $('#verdict').textContent=short?'Moon grummelt…':'Moon ist satt!';
+ $('#vText').textContent=short?`Er sinkt zurück in den Nebel – mit ${G.ropes} Ankerseil${G.ropes>1?'en':''} fliegst du weiter.`:'Er sinkt zufrieden zurück in den Nebel. Der Mond nimmt ab, die Reise geht weiter.';
+ if(!short){eyes('rise big happy');Snd.calm(20)}
+ return new Promise(res=>{const b=el('button','btn primary','Weiterreisen ›');b.onclick=()=>{resetEyes();res(true)};$('#fBtns').appendChild(b)});
+}
+function finalVerdict(dead){
+ let v,tx;
+ if(dead){v='Verschlungen…';tx=`Das letzte Ankerseil reißt. Langsam zieht Moon die Blunberrey hinab in den Nebel – nach ${G.n+1} von ${G.len} Inseln.`}
+ else if(G.ropes===1){v='Knapp entkommen!';tx='Mit einem letzten Seil reißt sich die Blunberrey los. Moon grummelt – aber die Reise ist geschafft.'}
+ else if(G.ropes===2){v='Gewonnen!';tx='Moon brummt satt und sinkt zurück in die Tiefe. Die Blunberrey segelt nach Hause.'}
+ else if(G.surplus<25*G.cycles){v='Prächtige Reise!';tx='Kein einziges Seil verloren. Moon schnurrt zufrieden wie eine riesige Katze.'}
+ else{v='Legendär!';tx='Kein Seil verloren und Vorräte im Überfluss. Noch lange erzählt man sich vom Farmer der Blunberrey.'}
+ $('#verdict').textContent=v;$('#vText').textContent=tx+` Gesamternte: ${G.grand}.`;
+ if(dead){Snd.base(1);Snd.spike(1,30)}else{eyes('rise big happy');Snd.base(.1);Snd.calm(60)}
+ const key='nimyard-best-'+G.len,best=+store.get(key)||null;
+ if(!dead&&(best===null||G.grand>best))store.set(key,G.grand);
+ updateBest();
+ const a=el('button','btn primary','Neue Reise');a.onclick=()=>{Snd.start();newGame()};
+ const m=el('button','btn','Hauptmenü');m.onclick=()=>{G=null;resetEyes();Snd.base(.35);show('menu')};
+ $('#fBtns').append(a,m);
+}
+function updateBest(){
+ const L={4:'Kurz',8:'Lang',12:'Groß'},o=[];for(const n of[4,8,12]){const b=store.get('nimyard-best-'+n);if(b)o.push(`${L[n]}: ${b}`)}
+ $('#best').textContent=o.length?'Beste Ernte · '+o.join(' · '):'';
+}
+
+/* =================== SOUND (generativ, Web Audio) =================== */
+const Snd=(()=>{
+ let ctx=null,master,rev,dark,light,sfx,droneF,timer;
+ let on=store.get('nimyard-music')!=='off';
+ let base=.4,tension=.4,holdUntil=0,nextNote=0,nextChord=0,chordIdx=0,nextImpact=0,mel=3;
+ const BEAT=60/72;
+ const SCALE=[293.66,329.63,369.99,440,493.88,587.33,659.25,739.99,880];
+ const CHORDS=[[146.83,185,220],[98,123.47,146.83],[123.47,146.83,185],[110,138.59,164.81]];
+ function impulse(sec){const sr=ctx.sampleRate,len=sr*sec|0,b=ctx.createBuffer(2,len,sr);for(let ch=0;ch<2;ch++){const d=b.getChannelData(ch);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,3)}return b}
+ function noiseBuf(sec){const sr=ctx.sampleRate,len=sr*sec|0,b=ctx.createBuffer(1,len,sr),d=b.getChannelData(0);let last=0;for(let i=0;i<len;i++){const w=Math.random()*2-1;last=(last+.02*w)/1.02;d[i]=last*3.5+w*.15}return b}
+ function lfo(freq,depth,target){const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.value=freq;g.gain.value=depth;o.connect(g);g.connect(target);o.start();return o}
+ function init(){
+  ctx=new (window.AudioContext||window.webkitAudioContext)();
+  master=ctx.createGain();master.gain.value=on?.85:0;
+  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=4;master.connect(comp);comp.connect(ctx.destination);
+  rev=ctx.createConvolver();rev.buffer=impulse(5);const rg=ctx.createGain();rg.gain.value=.55;rev.connect(rg);rg.connect(master);
+  const bus=(v,send)=>{const g=ctx.createGain();g.gain.value=v;g.connect(master);const s=ctx.createGain();s.gain.value=send;g.connect(s);s.connect(rev);return g};
+  dark=bus(0,.35);light=bus(0,.8);sfx=bus(.55,.5);
+  // Drone: rau, dumpf, gefiltert
+  droneF=ctx.createBiquadFilter();droneF.type='lowpass';droneF.frequency.value=170;droneF.Q.value=7;
+  lfo(.035,110,droneF.frequency);
+  const shaper=ctx.createWaveShaper();const cv=new Float32Array(1024);for(let i=0;i<1024;i++){const x=i/512-1;cv[i]=Math.tanh(x*2.6)}shaper.curve=cv;
+  const dg=ctx.createGain();dg.gain.value=.32;lfo(.06,.1,dg.gain);
+  [[36.71,0,.5],[36.71,9,.5],[55,-6,.35],[73.42,4,.18]].forEach(([f,det,v])=>{const o=ctx.createOscillator();o.type='sawtooth';o.frequency.value=f;o.detune.value=det;const g=ctx.createGain();g.gain.value=v;o.connect(g);g.connect(shaper);o.start()});
+  shaper.connect(droneF);droneF.connect(dg);dg.connect(dark);
+  const sub=ctx.createOscillator();sub.frequency.value=36.71;const sg=ctx.createGain();sg.gain.value=.35;sub.connect(sg);sg.connect(dark);sub.start();
+  // Space-Rauschen: wanderndes Bandpass-Rauschen + Bandrauschen
+  const nb=noiseBuf(4);
+  const n1=ctx.createBufferSource();n1.buffer=nb;n1.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=650;bp.Q.value=5;lfo(.022,480,bp.frequency);
+  const ng=ctx.createGain();ng.gain.value=.16;lfo(.045,.12,ng.gain);n1.connect(bp);bp.connect(ng);ng.connect(dark);n1.start();
+  const n2=ctx.createBufferSource();n2.buffer=nb;n2.loop=true;n2.playbackRate.value=.73;const hp=ctx.createBiquadFilter();hp.type='highpass';hp.frequency.value=3500;const hg=ctx.createGain();hg.gain.value=.025;n2.connect(hp);hp.connect(hg);hg.connect(dark);n2.start();
+  nextNote=nextChord=ctx.currentTime+1;nextImpact=ctx.currentTime+8;
+  timer=setInterval(tick,100);
+ }
+ function env(g,t,a,peak,d){g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(peak,t+a);g.gain.exponentialRampToValueAtTime(.0001,t+a+d)}
+ function piano(f,t,v=1){
+  const g=ctx.createGain(),lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=2600;
+  [[f,'triangle',1],[f*2,'sine',.22],[f*3.01,'sine',.06]].forEach(([fr,ty,a])=>{const o=ctx.createOscillator(),og=ctx.createGain();o.type=ty;o.frequency.value=fr;og.gain.value=a;o.connect(og);og.connect(lp);o.start(t);o.stop(t+3.4)});
+  env(g,t,.006,.2*v,3.1);lp.connect(g);g.connect(light);
+ }
+ function flute(f,t,dur){
+  const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f;
+  const vib=ctx.createOscillator(),vg=ctx.createGain();vib.frequency.value=5.2;vg.gain.setValueAtTime(0,t);vg.gain.linearRampToValueAtTime(3.5,t+.8);vib.connect(vg);vg.connect(o.frequency);
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.09,t+.35);g.gain.setValueAtTime(.09,t+dur);g.gain.linearRampToValueAtTime(0,t+dur+.7);
+  o.connect(g);g.connect(light);o.start(t);vib.start(t);o.stop(t+dur+.8);vib.stop(t+dur+.8);
+ }
+ function pad(ch,t,dur){
+  const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=900;const g=ctx.createGain();
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.055,t+2.2);g.gain.setValueAtTime(.055,t+dur-2);g.gain.linearRampToValueAtTime(0,t+dur+.5);
+  ch.forEach((f,i)=>{[0,7].forEach(det=>{const o=ctx.createOscillator();o.type='triangle';o.frequency.value=f;o.detune.value=det+(i-1)*3;o.connect(lp);o.start(t);o.stop(t+dur+.6)})});
+  lp.connect(g);g.connect(light);
+ }
+ function impact(strong){
+  if(!ctx||!on)return;const t=ctx.currentTime+.02;
+  const o=ctx.createOscillator(),g=ctx.createGain();o.frequency.setValueAtTime(strong?110:85,t);o.frequency.exponentialRampToValueAtTime(30,t+1.6);
+  env(g,t,.01,strong?1:.6,2.6);o.connect(g);g.connect(sfx);o.start(t);o.stop(t+3);
+  const n=ctx.createBufferSource();n.buffer=noiseBuf(2);const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.setValueAtTime(strong?1400:700,t);lp.frequency.exponentialRampToValueAtTime(80,t+1.5);
+  const ng=ctx.createGain();env(ng,t,.005,strong?.7:.4,1.6);n.connect(lp);lp.connect(ng);ng.connect(sfx);n.start(t);n.stop(t+2);
+ }
+ function swell(){
+  if(!ctx||!on)return;const t=ctx.currentTime+.02;
+  const n=ctx.createBufferSource();n.buffer=noiseBuf(4);const lp=ctx.createBiquadFilter();lp.type='lowpass';lp.Q.value=8;lp.frequency.setValueAtTime(150,t);lp.frequency.exponentialRampToValueAtTime(2800,t+2.6);
+  const g=ctx.createGain();g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.45,t+2.6);g.gain.linearRampToValueAtTime(0,t+2.7);
+  n.connect(lp);lp.connect(g);g.connect(sfx);n.start(t);n.stop(t+3);
+  setTimeout(()=>impact(true),2650);
+ }
+ function tick(){
+  const t=ctx.currentTime;
+  if(t>holdUntil)tension+=(base-tension)*.03;
+  dark.gain.setTargetAtTime(.15+.5*tension,t,1.2);
+  light.gain.setTargetAtTime(Math.max(.04,1-tension*1.15)*1.25,t,1.2);
+  droneF.Q.setTargetAtTime(5+tension*8,t,2);
+  if(t>nextChord-.25){pad(CHORDS[chordIdx++%4],nextChord,BEAT*8);nextChord+=BEAT*8}
+  if(t>nextNote-.25){
+   const calm=1-tension;let step=[.5,1,1,1,1.5,2][Math.random()*6|0];
+   if(Math.random()<calm*.8){
+    mel=Math.max(0,Math.min(SCALE.length-1,mel+[-2,-1,-1,0,1,1,2][Math.random()*7|0]));
+    if(calm>.6&&Math.random()<.12){flute(SCALE[mel],nextNote,BEAT*3);step=4}
+    else piano(SCALE[mel],nextNote,.6+Math.random()*.4);
+   }
+   if(Math.random()<.12)step+=2;
+   nextNote+=BEAT*step;
+  }
+  if(tension>.55&&t>nextImpact){impact(false);nextImpact=t+10+Math.random()*16}
+ }
+ return{
+  get on(){return on},
+  start(){try{if(!ctx)init();if(ctx.state==='suspended')ctx.resume()}catch(e){}},
+  toggle(){on=!on;store.set('nimyard-music',on?'on':'off');if(!ctx&&on)this.start();if(ctx)master.gain.setTargetAtTime(on?.85:0,ctx.currentTime,.3);return on},
+  base(v){base=v},
+  spike(v,sec){tension=Math.max(tension,v);if(ctx)holdUntil=ctx.currentTime+sec},
+  calm(sec){tension=.05;if(ctx)holdUntil=ctx.currentTime+sec},
+  impact,swell,
+  plop(){if(!ctx||!on)return;const t=ctx.currentTime;[0,2].forEach((s,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=SCALE[(mel+s)%SCALE.length]*(i?1:.5);env(g,t+i*.07,.005,.22,.35);o.connect(g);g.connect(sfx);o.start(t+i*.07);o.stop(t+.6)})},
+  chime(){if(!ctx||!on)return;const t=ctx.currentTime;[880,1174.66].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=f;env(g,t+i*.09,.004,.08,.5);o.connect(g);g.connect(sfx);o.start(t+i*.09);o.stop(t+.8)})},
+ };
+})();
+
+/* =================== TUTORIAL =================== */
+function miniSVG(rows,o={}){
+ const cs=34,W=rows[0].length*cs,H=rows.length*cs,pad=o.padR||0;
+ let s=`<svg viewBox="-4 -4 ${W+8+pad} ${H+8+(o.padB||0)}" width="${(W+8+pad)*1.15}" height="${(H+8+(o.padB||0))*1.15}"><defs><pattern id="hz" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(-45)"><rect width="7" height="7" fill="none"/><rect width="2" height="7" fill="rgba(74,68,102,.32)"/></pattern></defs>`;
+ rows.forEach((row,r)=>row.split('').forEach((ch,c)=>{const x=c*cs,y=r*cs;
+  if(ch==='.'){s+=`<rect x="${x}" y="${y}" width="${cs}" height="${cs}" fill="url(#hz)"/>`;return}
+  s+=`<rect x="${x}" y="${y}" width="${cs}" height="${cs}" fill="#c9e7a0" stroke="#24203a" stroke-width="2"/><rect x="${x+1}" y="${y+1}" width="${cs-2}" height="8" fill="#9fd36c"/>`;
+  if('WKSP'.includes(ch)){const g=o.grp&&o.grp.includes(r+','+c);
+   if(g)s+=`<rect x="${x+1}" y="${y+1}" width="${cs-2}" height="${cs-2}" rx="8" fill="#ffe066"/>`;
+   s+=`<rect x="${x+4}" y="${y+4}" width="${cs-8}" height="${cs-8}" rx="6" fill="${({W:'#f4c542',K:'#f08a3c',S:'#9b7fd1',P:'#7fa7c9'})[ch]}" stroke="#24203a" stroke-width="2.2"/>`;
+   s+=ICON[ch].replace('<svg viewBox="0 0 24 24">',`<svg x="${x+8}" y="${y+8}" width="${cs-16}" height="${cs-16}" viewBox="0 0 24 24">`)}
+  if(ch==='-')s+=`<text x="${x+cs/2}" y="${y+cs/2+6}" text-anchor="middle" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="16" fill="#c43d3d">−1</text>`;
+ }));
+ (o.labels||[]).forEach(l=>{s+=`<text x="${l.x}" y="${l.y}" font-family="Fredoka,Nunito,sans-serif" font-weight="700" font-size="${l.size||17}" fill="${l.c||'#2f6db5'}" text-anchor="${l.a||'start'}">${l.t}</text>`});
+ return s+'</svg>';
+}
+const SLIDES=[
+ {h:'Deine Reise',ill:()=>`<svg viewBox="0 0 320 230" width="230">${SHIP}</svg>`,
+  p:'Du fliegst mit der <b>Blunberrey</b> zu <b>4 fliegenden Inseln</b> und bepflanzt sie. Tief unten im Abgrund lauert <b>Moon</b>. Am Ende musst du mehr ernten, als er Hunger hat.'},
+ {h:'Eine Böe',ill:()=>[SEEDS[25],SEEDS[17],SEEDS[30]].map(s=>`<div class="card">${cardHtml({no:s[0],name:s[1],cells:s[2],fruit:s[3],res:s[4]})}</div>`).join(''),
+  p:'Der Wind bringt dir <b>3 Samen</b>. <b>Einen pflanzt du</b> auf deine Insel. Die anderen beiden wirfst du ab und bekommst ihre Ressource: Wasser, Dünger oder Wind.'},
+ {h:'Volle Linien',ill:()=>miniSVG(['.###.','WKSPW','.#K#.','.....'],{padR:46,labels:[{x:178,y:57,t:'+5 ✓'}]}),
+  p:'Ist eine <b>Zeile oder Spalte komplett bepflanzt</b>, bringt <b>jedes Feld darin 1 Punkt</b> – egal welche Früchte. Das ist deine wichtigste Punktequelle!'},
+ {h:'Fruchtgruppen',ill:()=>miniSVG(['KK.#.','K#..-','K#W#.'],{grp:['0,0','0,1','1,0','2,0'],padR:40,labels:[{x:4,y:-0,t:''},{x:180,y:30,t:'+3'}]}),
+  p:'<b>4 oder mehr gleiche Früchte</b>, die sich an einer Kante berühren, geben <b>+3</b> und leuchten golden. <b>Leere Felder</b> kosten am Ende <b>−1</b>.'},
+ {h:'Moons Festmahl',ill:()=>`<div style="display:flex;flex-direction:column;align-items:center;gap:12px">${EVART.sniff.replace('<svg viewBox="0 0 110 80">','<svg viewBox="0 0 110 80" width="150">')}<div class="ropes" style="border:0">${ANCHOR+ANCHOR+ANCHOR}</div></div>`,
+  p:'Sammle in deine <b>Vorratskammer</b>. Alle 4 Inseln ist Vollmond: Moon kommt zum <b>Festmahl</b> und will Punkte und bestimmte Früchte. Fehlt etwas, <b>beißt er Ankerseile durch</b>. Vor jeder Insel <b>dreht der Wind</b> und bringt neues Wetter.'},
+ {h:'So pflanzt du',ill:()=>`<div style="text-align:left;font-size:15px;line-height:2"><span class="key">1</span> Karte antippen<br><span class="key">2</span> aufs Feld tippen, um die Form zu verschieben<br><span class="key">3</span> <b>⟳ Drehen</b> / <b>⇋ Spiegeln</b><br><span class="key">4</span> nochmal tippen oder <b>✓ Pflanzen</b></div>`,
+  p:'Oben siehst du ☾, was Moon beim Festmahl will, und ✦ deinen Vorrat. Darunter: seine Wunschfrüchte und dein Stand. Viel Glück, Farmer!'},
+];
+let tutI=0,tutThen=null;
+function openTut(then){tutI=0;tutThen=then;
+ $('#slides').innerHTML=SLIDES.map((s,i)=>`<div class="slide" data-i="${i}"><h2>${s.h}</h2><div class="ill">${s.ill()}</div><p>${s.p}</p></div>`).join('');
+ $('#dots').innerHTML=SLIDES.map(()=>'<i></i>').join('');tutShow();show('tut')}
+function tutShow(){document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('on',i===tutI));document.querySelectorAll('#dots i').forEach((d,i)=>d.classList.toggle('on',i===tutI));
+ $('#tPrev').disabled=tutI===0;$('#tNext').innerHTML=tutI===SLIDES.length-1?(tutThen?'Los geht\'s!':'Fertig'):'Weiter ›'}
+function tutDone(){store.set('nimyard-tut','1');if(tutThen){const f=tutThen;tutThen=null;f()}else show('menu')}
+$('#tPrev').onclick=()=>{if(tutI>0){tutI--;tutShow()}};
+$('#tNext').onclick=()=>{if(tutI<SLIDES.length-1){tutI++;tutShow()}else tutDone()};
+$('#tSkip').onclick=tutDone;
+$('#bTut').onclick=()=>openTut(null);
+
+/* =================== MENUS =================== */
+$('#bStart').onclick=()=>{Snd.start();if(!store.get('nimyard-tut'))openTut(newGame);else newGame()};
+function musicLabel(){$('#bMusic').innerHTML=Snd.on?'♪ Musik: an':'♪ Musik: aus'}
+$('#bMusic').onclick=()=>{Snd.toggle();if(Snd.on){Snd.start();Snd.base(.35)}musicLabel()};musicLabel();
+
+let rulesBack='menu';
+document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{const g=b.dataset.go;if(g==='back'){show(rulesBack)}else{resetEyes();Snd.base(.35);show(g)}});
+$('#bPause').onclick=async()=>{
+ const v=await modal({k:'Pause',title:'Die Blunberrey ankert',head:'var(--blue)',body:'Der Wind wartet auf dich.',buttons:[{label:'Weiterspielen',cls:'primary',v:'go'},{label:Snd.on?'♪ Musik ausschalten':'♪ Musik einschalten',v:'music'},{label:'Spielregeln',v:'rules'},{label:'Reise abbrechen',v:'quit'}]});
+ if(v==='music'){Snd.toggle();if(Snd.on)Snd.start();musicLabel()}
+ if(v==='rules'){rulesBack='play';show('rules')}
+ if(v==='quit'){G=null;resetEyes();Snd.base(.35);show('menu')}
+};
+updateBest();
+</script>
+</body>
+</html>
