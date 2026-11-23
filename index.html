@@ -457,6 +457,15 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
 .toolRow .res .rv{font-size:19px;gap:4px}
 .handRow .hand{justify-content:center}
 .handRow .card{width:min(calc((100cqw - 20px) / 3),124px)}
+
+/* Böen-Anzeige: hell auf dem dunklen Abgrund-Verlauf */
+.gustRow{color:#fff;font-size:13px;text-shadow:0 1px 3px rgba(20,16,40,.55)}
+.gustRow svg.gust{stroke:#fff;opacity:.35;filter:drop-shadow(0 1px 2px rgba(20,16,40,.5))}
+.gustRow svg.gust.done{opacity:.75}
+.gustRow svg.gust.now{opacity:1;stroke:#f6e7a6}
+/* Joker-Beschriftung passt auch auf sehr kleine Handys */
+.toolRow .deckCol{gap:3px}
+@media (max-width:430px){.toolRow .res{padding-left:2px;padding-right:2px}.toolRow .res .rl{font-size:clamp(9.5px,2.75vw,11px);letter-spacing:-.15px}}
 </style>
 </head>
 <body>
