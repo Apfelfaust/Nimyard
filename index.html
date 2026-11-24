@@ -1146,8 +1146,16 @@ async function chooseIsland(){
  const sc=el('div','islScene',`<div class="head"><h2>Wohin weht der Wind?</h2><div>☾ Festmahl nach Insel ${G.cycle*4+4}: ${G.hunger} · ✦ Vorrat ${G.total}</div></div>`);
  document.body.appendChild(sc);
  const dr=rectOf($('#ideck'));
- const W=Math.min(innerWidth*.30,innerHeight*.30,230),H=W*112/63,gap=Math.min(12,innerWidth*.025),total=3*W+2*gap,x0=(innerWidth-total)/2,y=Math.max(innerHeight*.5-H/2,innerHeight*.22);
- const cards=opts.map((id,i)=>{const c=el('div','icv',`<div class="cback ib">${ISLBACK_SVG}</div>`);c.style.left=(x0+i*(W+gap))+'px';c.style.width=W+'px';c.style.top=y+'px';sc.appendChild(c);return c});
+ const narrow=innerWidth<560;let pos;
+ if(narrow){ // Handy: zwei oben, eine mittig darunter – größer und gut lesbar
+  const gap=12,top=sc.querySelector('.head').getBoundingClientRect().bottom+14,avail=innerHeight-top-20-gap;
+  const W=Math.min((innerWidth-3*gap)/2,avail/2*63/112,220),H=W*112/63,cx=innerWidth/2;
+  pos=[[cx-W-gap/2,top,W],[cx+gap/2,top,W],[cx-W/2,top+H+gap,W]];
+ }else{
+  const W=Math.min(innerWidth*.30,innerHeight*.30,230),H=W*112/63,gap=Math.min(12,innerWidth*.025),total=3*W+2*gap,x0=(innerWidth-total)/2,y=Math.max(innerHeight*.5-H/2,innerHeight*.22);
+  pos=[0,1,2].map(i=>[x0+i*(W+gap),y,W]);
+ }
+ const cards=opts.map((id,i)=>{const c=el('div','icv',`<div class="cback ib">${ISLBACK_SVG}</div>`);c.style.left=pos[i][0]+'px';c.style.width=pos[i][2]+'px';c.style.top=pos[i][1]+'px';sc.appendChild(c);return c});
  await Promise.all(cards.map((c,i)=>{const r=rectOf(c);return c.animate([{transform:`translate(${dr.left-r.left}px,${dr.top-r.top}px) scale(${dr.width/r.width})`},{transform:'none'}],{duration:600,delay:i*160,easing:'cubic-bezier(.2,.9,.3,1.1)',fill:'backwards'}).finished}));
  for(let i=0;i<3;i++){const c=cards[i];await c.animate([{transform:'rotateY(0)'},{transform:'rotateY(90deg)'}],{duration:180,fill:'forwards'}).finished;c.innerHTML=islandCardHtml(ISLANDS[opts[i]]);Snd.chime();await c.animate([{transform:'rotateY(-90deg)'},{transform:'rotateY(0)'}],{duration:200,fill:'forwards'}).finished}
  const idx=await new Promise(res=>cards.forEach((c,i)=>c.onclick=()=>res(i)));
