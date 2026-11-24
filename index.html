@@ -510,10 +510,41 @@ h1,h2,h3,.f{font-family:Fredoka,Nunito,sans-serif;margin:0}
 .title .sub i{font-style:normal;display:inline-block;animation:breeze 5s ease-in-out infinite;animation-delay:calc(var(--i)*55ms)}
 @keyframes breeze{0%,62%,100%{transform:translateY(0) rotate(0)}68%{transform:translateY(-4px) rotate(-5deg)}74%{transform:translateY(1px) rotate(3deg)}80%{transform:translateY(0) rotate(0)}}
 @media (prefers-reduced-motion:reduce){.title .sub i{animation:none}}
+
+/* Sterne: Pfeil zeigt auf die Linie, mehr Platz beim Auswählen */
+.lineMark .tri{width:9px;height:9px;fill:currentColor;flex:0 0 9px}
+.lineMark.star{gap:1px}
+.lineMark.pick{gap:2px;font-size:18px;color:#24203a}
+.lineMark.pick .tri{width:10px;height:10px;flex-basis:10px}
+.toolRow{transition:margin-top .3s ease}
+body.starPick .toolRow{margin-top:44px}
+.gustRow{flex-wrap:wrap}.gustRow .sNote{flex-basis:100%;text-align:center;font-size:11.5px;opacity:.9}
+
+/* Moons Kopf */
+#eyes,.mEyes{position:relative}
+#eyes{position:absolute}
+.moonHead{position:absolute;pointer-events:none;z-index:0}
+#eyes .eye,.mEyes .eye{z-index:1;--lidc:#4a4470}
+#eyes .eye{box-shadow:0 0 22px rgba(246,231,166,.45)}
+.mEyes .tongueWrap{z-index:5}
+#abyss{overflow:visible}
+.moonCard .mEyes{margin-top:30px}
+.moonCard .cReqs{position:relative;z-index:2}
 </style>
 </head>
 <body>
 <div id="sky"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+
+<linearGradient id="mh_rock" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5a5478"/><stop offset=".55" stop-color="#3d3860"/><stop offset="1" stop-color="#2a2547"/></linearGradient>
+<linearGradient id="mh_spk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b80aa"/><stop offset="1" stop-color="#4d4670"/></linearGradient>
+<radialGradient id="mh_cap" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#b3a9cc" stop-opacity=".9"/><stop offset=".6" stop-color="#8b80aa" stop-opacity=".45"/><stop offset="1" stop-color="#6b6090" stop-opacity="0"/></radialGradient>
+<radialGradient id="mh_scl" cx=".5" cy=".3" r=".75"><stop offset="0" stop-color="#fffaf0"/><stop offset=".7" stop-color="#eadfe6"/><stop offset="1" stop-color="#b6a8c8"/></radialGradient>
+<clipPath id="mh_hc"><path id="mh_hp" d="M-4 330 L 7 262 Q 11 242, 28 230 L 74 192 Q 88 180, 104 168 Q 118 157, 140 154 Q 152 150, 166 152 Q 195 146, 224 150 Q 238 149, 250 154 Q 272 160, 286 172 Q 302 182, 316 192 L 362 230 Q 379 242, 383 262 L 394 330 Z"/></clipPath>
+<filter id="mh_soft"><feGaussianBlur stdDeviation="6"/></filter>
+<filter id="mh_soft2"><feGaussianBlur stdDeviation="2.2"/></filter>
+<radialGradient id="mh_mist" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#e9e2f6" stop-opacity=".7"/><stop offset="1" stop-color="#e9e2f6" stop-opacity="0"/></radialGradient>
+</defs></svg>
 <div id="abyss"><div class="eyes peek" id="eyes"><div class="eye"><i class="pup"></i><b class="lid"></b></div><div class="tongueWrap"><div class="tongue"></div></div><div class="eye"><i class="pup"></i><b class="lid"></b></div></div></div>
 
 <div id="app">
@@ -796,7 +827,7 @@ const ISLANDS=[
  {id:0,name:"Stille Lichtung",g:4,rows:[".###.","#####","#####",".###.","....."],rule:"Keine Sonderregel. Ein ruhiger Ort für den Anfang deiner Reise."},
  {id:1,name:"Glutfels",g:4,rows:[".###.","#####","####.",".####","..#.."],rule:"Kürbis-Gruppen geben +3 extra. Bei Ankunft verdunstet dein gesamtes Wasser.",bonus:"K",dry:1},
  {id:2,name:"Nebelkrone",g:3,rows:["##...","##R#.",".####",".#R#.","...##"],rule:"Nebelpilz-Gruppen zählen hier schon ab 3 Feldern.",pmin:3},
- {id:3,name:"Sturmspitze",g:3,rows:["#####","#####","..##.","..#..","..#.."],rule:"Der Wind bringt je Böe 4 Karten. Wind kann hier nicht als Joker genutzt werden.",draw:4,noWind:1},
+ {id:3,name:"Sturmspitze",g:3,rows:["#####","#####","..##.","..#..","..#.."],rule:"+1 Samen pro Böe. Wind kann hier nicht als Joker genutzt werden.",dd:1,noWind:1},
  {id:4,name:"Weizenwiege",g:5,rows:["#####","#####","####.","###..","##..."],rule:"Weizen-Gruppen geben +3 extra.",bonus:"W"},
  {id:5,name:"Sternenhain",g:4,rows:[".##..","####.","#####",".####","..##."],rule:"Sternenbeeren-Gruppen geben +3 extra.",bonus:"S"},
  {id:6,name:"Moosbuckel",g:5,rows:["#####","#~###","#####","###..","###.."],rule:"In der Mitte liegt ein Teich. Leere Felder kosten hier keine Punkte.",noEmpty:1},
@@ -843,8 +874,8 @@ const WEATHER=[
  {id:'sued',name:'Südwind',fav:'W',t:'Hast du in einer Böe einen Samen, der kein Weizen ist, schiebst du einen davon unter den Stapel und ziehst neu.'},
  {id:'ost',name:'Ostwind',fav:'S',t:'Hast du in einer Böe einen Samen, der keine Sternenbeere ist, schiebst du einen davon unter den Stapel und ziehst neu.'},
  {id:'nebel',name:'Nebelwind',fav:'P',t:'Hast du in einer Böe einen Samen, der kein Nebelpilz ist, schiebst du einen davon unter den Stapel und ziehst neu.'},
- {id:'flaute',name:'Flaute',draw:2,wind:2,t:'Nur 2 Samen pro Böe. Dafür bekommst du sofort 2 Wind.'},
- {id:'sturm',name:'Sturm',draw:4,gm:-1,t:'4 Samen pro Böe – aber eine Böe weniger.'},
+ {id:'flaute',name:'Flaute',dd:-1,wind:2,t:'−1 Samen pro Böe. Dafür bekommst du sofort 2 Wind.'},
+ {id:'sturm',name:'Sturm',dd:1,gm:-1,t:'+1 Samen pro Böe – aber eine Böe weniger.'},
  {id:'pollen',name:'Pollenflug',pollen:1,t:'Fruchtgruppen zählen schon ab 3 Feldern.'},
  {id:'regen',name:'Regenfront',rain:1,t:'Jede Böe bringt dir 1 Wasser.'},
  {id:'abend',name:'Abendrot',dusk:1,t:'Jede volle Zeile oder Spalte gibt +1.'},
@@ -1151,7 +1182,7 @@ async function gustTurn(){
  G.played++;updateEyes();Snd.base(.3+Math.min(1,G.played/16)*.5);
  renderAll();
  if(G.weather.rain)gain('Wa',1);
- await drawCards(G.weather.draw||G.isl.draw||3);
+ await drawCards(seedsPerGust());
  G.busy=false;G.phase='pick';
  const f=G.weather.fav;
  if(f&&G.hand.some(c=>c.t==='seed'&&c.fruit!==f)){G.blowMode=true;renderAll();await new Promise(r=>G.blowDone=r)}
@@ -1376,13 +1407,13 @@ function lines(){
 function starTargets(){return lines().filter(l=>l.full&&!G.stars.has(l.id))}
 
 /* =================== RENDER =================== */
-function renderAll(){renderDeck();renderTop();renderRes();renderDock();renderBoard();renderActions();renderHand();renderJokers()}
+function renderAll(){document.body.classList.toggle('starPick',!!(G&&G.starMode));renderDeck();renderTop();renderRes();renderDock();renderBoard();renderActions();renderHand();renderJokers()}
 function renderTop(){
  $('#vorrat').textContent=G.total;
  if(G.board){const lv=score().total;const l=$('#live');l.textContent=(lv>=0?'+':'−')+Math.abs(lv);l.style.color=lv>=0?'var(--blue)':'#c43d3d';$('#livePill').classList.toggle('fed',G.total+lv>=G.hunger)}
  $('#ropesTop').innerHTML=ropesHtml();
  if(!G.isl){$('#gusts').innerHTML='';$('#live').textContent='';return}
- const g=$('#gusts');g.innerHTML=`<span>Böe ${Math.min(G.gust+1,G.gusts)} von ${G.gusts}</span>`;for(let i=0;i<G.gusts;i++){g.insertAdjacentHTML('beforeend',gustSvg);const s=g.lastChild;if(i<G.gust)s.classList.add('done');if(i===G.gust)s.classList.add('now')}
+ const g=$('#gusts');g.innerHTML=`<span>Böe ${Math.min(G.gust+1,G.gusts)} von ${G.gusts}</span>`;for(let i=0;i<G.gusts;i++){g.insertAdjacentHTML('beforeend',gustSvg);const s=g.lastChild;if(i<G.gust)s.classList.add('done');if(i===G.gust)s.classList.add('now')};{const n=seedsNote();if(n)g.insertAdjacentHTML('beforeend',`<small class="sNote">· ${n}</small>`)}
 }
 function renderRes(){renderJokers()}
 function bumpPill(){moonMood('angry')}
@@ -1428,11 +1459,13 @@ function renderBoard(){
  lines().forEach(l=>{
   const m=el('div','lineMark');
   const star=G.stars.has(l.id);
-  m.innerHTML=star?'★':l.full?'✓':'';
+  const tri=`<svg class="tri" viewBox="0 0 10 10"><path d="${l.kind==='r'?'M1 5L9 1V9Z':'M5 1L9 9H1Z'}"/></svg>`;
+  m.innerHTML=star?tri+'<span>★</span>':l.full?'✓':'';
   if(star)m.classList.add('star');else if(l.full)m.classList.add('full');
-  if(G.starMode&&l.full&&!star){m.classList.add('pick');m.innerHTML='★';m.onclick=()=>setStar(l.id)}
-  if(l.kind==='r'){m.style.cssText+=`;left:${22+bd.clientWidth+2}px;top:${l.i*size}px;width:20px;height:${size}px`}
-  else{m.style.cssText+=`;top:${bd.clientHeight+2}px;left:${22+l.i*size}px;height:22px;width:${size}px`}
+  if(G.starMode&&l.full&&!star){m.classList.add('pick');m.innerHTML=tri+'<span>★</span>';m.onclick=()=>setStar(l.id)}
+  const big=G.starMode;
+  if(l.kind==='r'){const w=big?34:24;m.style.cssText+=`;left:${22+bd.clientWidth+2}px;top:${l.i*size+(big?2:0)}px;width:${w}px;height:${size-(big?4:0)}px`}
+  else{const h=big?32:22;m.style.cssText+=`;top:${bd.clientHeight+3}px;left:${22+l.i*size+(big?2:0)}px;height:${h}px;width:${size-(big?4:0)}px`}
   if(m.innerHTML)wrap.appendChild(m);
  });
 }
@@ -1472,6 +1505,65 @@ function cellClick(r,c){
  bd.addEventListener('wheel',ev=>{if(!placing())return;ev.preventDefault();const now=Date.now();if(now-wheelT<180)return;wheelT=now;transform(ev.deltaY<0?rot:r=>rot(rot(rot(r))))},{passive:false});
  bd.addEventListener('contextmenu',ev=>{if(!placing())return;ev.preventDefault();transform(mir)});
 })();
+
+/* Moons Kopf: wird hinter jedes Augenpaar gelegt und an Augenabstand/-größe angepasst */
+const MOONHEAD=`
+
+
+
+
+
+<g filter="url(#mh_soft)"><ellipse cx="-10" cy="250" rx="70" ry="50" fill="url(#mh_mist)"/><ellipse cx="400" cy="246" rx="70" ry="52" fill="url(#mh_mist)"/><ellipse cx="20" cy="300" rx="60" ry="30" fill="url(#mh_mist)" opacity=".7"/><ellipse cx="372" cy="296" rx="60" ry="30" fill="url(#mh_mist)" opacity=".7"/></g>
+<g stroke="#24203a" stroke-width="4" stroke-linejoin="round">
+ <path d="M54 218 L 58 174 Q 60 166 68 166 L 88 170 Q 96 172 96 180 L 98 196 Z" fill="url(#mh_spk)"/>
+ <path d="M148 166 L 132 144 Q 128 139 121 140 L 108 143 Q 101 145 100 152 L 96 184 Z" fill="url(#mh_spk)"/>
+ <path d="M238 164 L 254 141 Q 258 136 265 137 L 280 140 Q 287 142 289 149 L 298 186 Z" fill="url(#mh_spk)"/>
+ <path d="M296 186 L 306 168 Q 309 162 316 163 L 326 168 Q 332 171 333 178 L 340 210 Z" fill="url(#mh_spk)"/>
+</g>
+<g fill="none" stroke="#d8cfe8" stroke-width="2.2" stroke-linecap="round" opacity=".7"><path d="M64 170 l20 3"/><path d="M126 143 l-18 4"/><path d="M262 140 l18 3"/><path d="M312 166 l12 5"/></g>
+<use href="#mh_hp" fill="url(#mh_rock)"/>
+<g clip-path="url(#mh_hc)">
+ <ellipse cx="195" cy="176" rx="130" ry="30" fill="url(#mh_cap)"/>
+ <g filter="url(#mh_soft2)" fill="#cfc6e6" opacity=".45">
+  <ellipse cx="150" cy="168" rx="14" ry="6"/><ellipse cx="172" cy="178" rx="9" ry="4"/><ellipse cx="200" cy="164" rx="12" ry="5"/>
+  <ellipse cx="236" cy="172" rx="15" ry="6"/><ellipse cx="262" cy="182" rx="9" ry="4"/><ellipse cx="214" cy="190" rx="8" ry="3.5"/>
+  <ellipse cx="128" cy="186" rx="7" ry="3"/><ellipse cx="288" cy="190" rx="10" ry="4"/><ellipse cx="190" cy="200" rx="6" ry="3"/>
+ </g>
+ <g fill="#ece6f7" opacity=".55"><circle cx="160" cy="170" r="2"/><circle cx="182" cy="166" r="1.6"/><circle cx="226" cy="168" r="2.2"/><circle cx="248" cy="176" r="1.6"/><circle cx="204" cy="180" r="1.4"/><circle cx="270" cy="186" r="1.8"/><circle cx="140" cy="180" r="1.5"/></g>
+ <!-- Dellen -->
+ <g stroke="#24203a" stroke-width="1.8">
+  <ellipse cx="290" cy="198" rx="6" ry="4.5" fill="#34305a"/><ellipse cx="96" cy="214" rx="4.5" ry="3.5" fill="#34305a"/><ellipse cx="236" cy="214" rx="3.5" ry="2.6" fill="#34305a"/>
+ </g>
+ <g fill="none" stroke="#a89ec4" stroke-width="1.4" opacity=".8"><path d="M286 201 q4 2 8 0"/><path d="M93 216 q3 1.5 6 0"/></g>
+ <!-- Kratzer und Unebenheiten -->
+ <g fill="none" stroke="#24203a" stroke-width="2.2" stroke-linecap="round" opacity=".55">
+  <path d="M318 214 l8 4"/><path d="M330 222 l10 5"/><path d="M346 234 l7 5"/><path d="M350 244 l6 6"/>
+  <path d="M46 248 l-6 10"/><path d="M60 230 l-8 9"/><path d="M38 286 l-3 9"/><path d="M262 230 l12 -2"/><path d="M180 232 l10 2"/>
+ </g>
+ <g fill="none" stroke="#a89ec4" stroke-width="1.6" stroke-linecap="round" opacity=".55"><path d="M54 236 l-7 8"/><path d="M336 220 l9 5"/></g>
+</g>
+</g>
+<use href="#mh_hp" fill="none" stroke="#24203a" stroke-width="5" stroke-linejoin="round"/>
+<g stroke="#2c2747" stroke-width="3" stroke-linecap="round" fill="none"><path d="M26 262 q4 -12 12 -18 M364 262 q-4 -12 -12 -18 M64 210 q8 -5 16 -6 M326 210 q-8 -5 -16 -6 M180 214 q10 -3 20 0"/></g>
+<g stroke="#24203a" stroke-width="2.4" fill="#c99a6e">
+ <ellipse cx="196" cy="158" rx="7" ry="4"/><ellipse cx="248" cy="180" rx="9" ry="4" transform="rotate(-12 248 180)"/><ellipse cx="126" cy="174" rx="5" ry="4"/><ellipse cx="80" cy="212" rx="5.5" ry="3.5" transform="rotate(-25 80 212)"/>
+ <ellipse cx="318" cy="198" rx="4.5" ry="3.5" fill="#8c86a8"/></g>
+<g fill="#f1dcc2" opacity=".7"><ellipse cx="194" cy="156.5" rx="3" ry="1.3"/><ellipse cx="245" cy="178.5" rx="4" ry="1.3"/></g>
+`;
+function placeHead(c){
+ const es=c.querySelectorAll(':scope>.eye');if(es.length<2)return;
+ let h=c.querySelector(':scope>.moonHead');
+ if(!h){h=document.createElementNS('http://www.w3.org/2000/svg','svg');h.setAttribute('class','moonHead');h.setAttribute('viewBox','0 120 390 210');h.setAttribute('overflow','visible');h.innerHTML=MOONHEAD;c.prepend(h);
+  if(window.ResizeObserver){const ro=new ResizeObserver(()=>placeHead(c));es.forEach(e=>ro.observe(e));ro.observe(c)}}
+ const e1=es[0],e2=es[1],x1=e1.offsetLeft+e1.offsetWidth/2,x2=e2.offsetLeft+e2.offsetWidth/2,y1=e1.offsetTop+e1.offsetHeight/2;
+ const dist=x2-x1;if(dist<=0)return;const W=dist*390/214;
+ h.style.width=W+'px';h.style.height=(W*210/390)+'px';h.style.left=(x1-88/390*W)+'px';h.style.top=(y1-152/390*W)+'px';
+}
+function attachHeads(){document.querySelectorAll('#eyes, .mEyes').forEach(c=>{if(!c.closest('#cine'))placeHead(c)})}
+new MutationObserver(()=>attachHeads()).observe(document.body,{childList:true,subtree:true});
+addEventListener('load',attachHeads);attachHeads();
+function seedsPerGust(){return Math.max(2,3+((G.isl&&G.isl.dd)||0)+((G.weather&&G.weather.dd)||0))}
+function seedsNote(){const p=[];if(G.isl&&G.isl.dd)p.push(`Insel ${G.isl.dd>0?'+':'−'}${Math.abs(G.isl.dd)}`);if(G.weather&&G.weather.dd)p.push(`${G.weather.name} ${G.weather.dd>0?'+':'−'}${Math.abs(G.weather.dd)}`);return p.length?`${seedsPerGust()} Samen (${p.join(', ')})`:''}
 function setStar(id){G.stars.add(id);G.res.Du-=2;G.starMode=false;toast('★ Diese Linie zählt doppelt');renderAll()}
 function renderActions(){
  const a=$('#actions');a.innerHTML='';
